@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROY'S ERA — Feel the Music. Live the Moment.</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Tone.js for Real-Time Studio Audio Synthesis Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            era: {
+              bg: '#101014',
+              card: '#191923',
+              elevated: '#222230',
+              purple: '#8B5CF6',
+              purpleHover: '#7C3AED',
+              pink: '#EC4899',
+              text: '#FFFFFF',
+              muted: '#A1A1AA',
+              border: 'rgba(255, 255, 255, 0.08)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars & Visualizer Styles */
+    body {
+      background-color: #101014;
+      color: #FFFFFF;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #101014;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2e2e3e;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8B5CF6;
+    }
+
+    .glass-panel {
+      background: rgba(25, 25, 35, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .neon-glow {
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+    }
+
+    .neon-text-gradient {
+      background: linear-gradient(135deg, #FFFFFF 0%, #C4B5FD 45%, #EC4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Animated Equalizer Bars */
+    @keyframes eqBounce1 {
+      0%, 100% { height: 25%; }
+      50% { height: 95%; }
+    }
+    @keyframes eqBounce2 {
+      0%, 100% { height: 80%; }
+      50% { height: 30%; }
+    }
+    @keyframes eqBounce3 {
+      0%, 100% { height: 40%; }
+      50% { height: 100%; }
+    }
+    .eq-bar-1 { animation: eqBounce1 0.7s ease-in-out infinite; }
+    .eq-bar-2 { animation: eqBounce2 0.55s ease-in-out infinite; }
+    .eq-bar-3 { animation: eqBounce3 0.85s ease-in-out infinite; }
+
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 5px;
+      border-radius: 999px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 13px;
+      width: 13px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      margin-top: -4px;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.9);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]:hover::-webkit-slider-thumb {
+      transform: scale(1.25);
+    }
+
+    /* Hide scrollbar for horizontal pill carousels */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#101014] text-white antialiased selection:bg-purple-600 selection:text-white">
+
+  <!-- APP SHELL -->
+  <div id="app-root" class="flex h-screen w-screen overflow-hidden relative">
+
+    <!-- MOBILE SIDEBAR BACKDROP -->
+    <div id="mobile-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-black/70 z-30 hidden lg:hidden backdrop-blur-sm"></div>
+
+    <!-- 1. LEFT SIDEBAR -->
+    <aside id="left-sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-[#121218] border-r border-white/10 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out pb-24">
+      <!-- Brand Logo -->
+      <div class="p-5 flex items-center justify-between border-b border-white/5">
+        <div onclick="navigate('home')" class="flex items-center gap-3 cursor-pointer group">
+          <!-- Custom ROY'S ERA Soundwave SVG Emblem -->
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] flex items-center justify-center shadow-lg shadow-purple-600/30 group-hover:scale-105 transition-transform">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="10" width="2.4" height="6" rx="1.2" fill="white"/>
+              <rect x="6.2" y="5" width="2.4" height="14" rx="1.2" fill="white"/>
+              <rect x="10.4" y="2" width="2.4" height="20" rx="1.2" fill="white"/>
+              <rect x="14.6" y="7" width="2.4" height="10" rx="1.2" fill="white"/>
+              <rect x="18.8" y="4" width="2.4" height="15" rx="1.2" fill="white"/>
+            </svg>
+          </div>
+          <div>
+            <div class="font-display font-extrabold text-lg tracking-wider bg-gradient-to-r from-white via-purple-200 to-pink-300 bg-clip-text text-transparent">ROY'S ERA</div>
+            <div class="text-[10px] tracking-widest uppercase text-purple-400 font-semibold">Feel The Music</div>
+          </div>
+        </div>
+        <button onclick="toggleMobileSidebar(false)" class="lg:hidden p-2 text-zinc-400 hover:text-white rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Sidebar Scrollable Navigation -->
+      <div class="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+        <!-- Main Menu -->
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Discover</p>
+          <nav class="space-y-1">
+            <button onclick="navigate('home')" data-nav="home" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-white bg-purple-600/20 border border-purple-500/30">
+              <i data-lucide="home" class="w-4 h-4 text-purple-400"></i> Home
+            </button>
+            <button onclick="navigate('explore')" data-nav="explore" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="compass" class="w-4 h-4"></i> Explore & Moods
+            </button>
+            <button onclick="navigate('search')" data-nav="search" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="search" class="w-4 h-4"></i> Search
+            </button>
+          </nav>
+        </div>
+
+        <!-- Regional Hubs (Telugu Primary) -->
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Languages</p>
+          <nav class="space-y-1">
+            <button onclick="navigate('language', 'Telugu')" data-nav="lang-Telugu" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 transition-all">
+              <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Telugu Music</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-semibold">PRIMARY</span>
+            </button>
+            <button onclick="navigate('language', 'Hindi')" data-nav="lang-Hindi" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <span class="w-2 h-2 rounded-full bg-pink-500"></span> Hindi Music
+            </button>
+            <button onclick="navigate('language', 'Tamil')" data-nav="lang-Tamil" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span> Tamil Music
+            </button>
+          </nav>
+        </div>
+
+        <!-- Catalog -->
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Catalog</p>
+          <nav class="space-y-1">
+            <button onclick="navigate('artists')" data-nav="artists" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="mic-2" class="w-4 h-4"></i> Artists & Composers
+            </button>
+            <button onclick="navigate('albums')" data-nav="albums" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="disc" class="w-4 h-4"></i> Albums & Movies
+            </button>
+          </nav>
+        </div>
+
+        <!-- Your Library -->
+        <div>
+          <div class="px-3 flex items-center justify-between mb-2">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Your Library</p>
+            <button onclick="openCreatePlaylistModal()" title="Create Playlist" class="p-1 rounded-lg bg-purple-600/20 text-purple-400 hover:bg-purple-600 hover:text-white transition-colors">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <nav class="space-y-1">
+            <button onclick="navigate('liked')" data-nav="liked" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <span class="flex items-center gap-3"><i data-lucide="heart" class="w-4 h-4 text-pink-500"></i> Liked Songs</span>
+              <span id="sidebar-liked-count" class="text-xs text-zinc-500">0</span>
+            </button>
+            <button onclick="navigate('recent')" data-nav="recent" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="history" class="w-4 h-4"></i> Recently Played
+            </button>
+            <button onclick="navigate('library')" data-nav="library" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+              <i data-lucide="library" class="w-4 h-4"></i> Your Playlists
+            </button>
+            <button onclick="openCreatePlaylistModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition-all">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i> Create Playlist
+            </button>
+          </nav>
+
+          <!-- Dynamic User Playlists List -->
+          <div id="sidebar-playlists-list" class="mt-3 pt-3 border-t border-white/5 space-y-1"></div>
+        </div>
+
+        <!-- Admin & Schema Tools -->
+        <div class="pt-2 border-t border-white/5">
+          <button onclick="navigate('admin')" data-nav="admin" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-amber-400/90 hover:text-amber-300 hover:bg-amber-500/10 transition-all">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> Admin Studio & DB
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT VIEWPORT -->
+    <div class="flex-1 flex flex-col min-w-0 bg-gradient-to-b from-[#171722] via-[#101014] to-[#101014] relative">
+
+      <!-- TOP HEADER BAR -->
+      <header class="sticky top-0 z-20 glass-panel border-b border-white/5 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3 flex-1 max-w-xl">
+          <button onclick="toggleMobileSidebar(true)" class="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Quick Search Input -->
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input
+              id="global-search-input"
+              type="text"
+              placeholder="Search Telugu, Hindi, Tamil songs, singers, albums..."
+              onfocus="navigate('search')"
+              oninput="handleLiveSearch(this.value)"
+              class="w-full bg-[#191923] border border-white/10 focus:border-purple-500 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-zinc-400 focus:outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Right Controls: Language Filter Pill, Sleep Timer, User Profile -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Preferred Language Quick Selector -->
+          <select id="header-lang-pref" onchange="setPreferredLanguage(this.value)" title="Preferred Language" class="hidden sm:block bg-[#191923] border border-white/10 text-xs font-medium text-zinc-200 rounded-full px-3 py-1.5 focus:outline-none focus:border-purple-500 cursor-pointer">
+            <option value="Telugu">Lang: Telugu</option>
+            <option value="Hindi">Lang: Hindi</option>
+            <option value="Tamil">Lang: Tamil</option>
+            <option value="All">Lang: All</option>
+          </select>
+
+          <!-- Sleep Timer Button -->
+          <button onclick="cycleSleepTimer()" id="sleep-timer-btn" title="Sleep Timer" class="p-2 rounded-full bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-purple-400 transition-colors relative">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+            <span id="sleep-badge" class="hidden absolute -top-1 -right-1 px-1 text-[9px] font-bold bg-purple-600 text-white rounded-full">15m</span>
+          </button>
+
+          <!-- User Profile / Auth Button -->
+          <div id="user-header-area"></div>
+        </div>
+      </header>
+
+      <!-- DYNAMIC VIEW CONTAINER -->
+      <main id="main-view" class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-6 pb-36 space-y-10 scroll-smooth">
+        <!-- Populated dynamically by JavaScript Router -->
+      </main>
+    </div>
+
+    <!-- RIGHT QUEUE SIDEBAR (Slide-over) -->
+    <aside id="queue-drawer" class="fixed inset-y-0 right-0 z-40 w-80 sm:w-96 bg-[#15151E] border-l border-white/10 transform translate-x-full transition-transform duration-300 flex flex-col pb-24 shadow-2xl">
+      <div class="p-5 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="list-music" class="w-5 h-5 text-purple-400"></i>
+          <h3 class="font-display font-bold text-base">Play Queue</h3>
+        </div>
+        <button onclick="toggleQueueDrawer(false)" class="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="queue-content" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Queue items rendered here -->
+      </div>
+    </aside>
+
+    <!-- FULL-SCREEN EXPANDED PLAYER OVERLAY -->
+    <div id="expanded-player" class="fixed inset-0 z-50 bg-gradient-to-br from-[#19122B] via-[#101014] to-[#1D1120] transform translate-y-full transition-transform duration-500 ease-out flex flex-col justify-between p-6 sm:p-10 overflow-y-auto">
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between max-w-6xl w-full mx-auto">
+        <button onclick="toggleExpandedPlayer(false)" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-sm font-medium transition-all">
+          <i data-lucide="chevron-down" class="w-5 h-5"></i> Minimize
+        </button>
+        <div class="text-center">
+          <p class="text-[11px] uppercase tracking-widest text-purple-400 font-bold">Now Playing on ROY'S ERA</p>
+          <p id="exp-source-badge" class="text-xs text-zinc-400 mt-0.5">Authorized Studio Audio Engine</p>
+        </div>
+        <button onclick="shareCurrentSong()" class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all" title="Share Song">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Center Artwork & Visualizer -->
+      <div class="max-w-5xl w-full mx-auto my-auto py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="flex flex-col items-center">
+          <div class="relative w-64 h-64 sm:w-80 sm:h-80 rounded-3xl overflow-hidden shadow-2xl shadow-purple-900/50 border border-white/15 group">
+            <img id="exp-artwork" src="" alt="Album Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          </div>
+          <!-- Live Frequency Visualizer Canvas -->
+          <canvas id="visualizer-canvas" class="w-full max-w-xs h-16 mt-6 rounded-xl"></canvas>
+        </div>
+
+        <div class="space-y-6 text-center lg:text-left">
+          <div>
+            <span id="exp-lang-pill" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-purple-600/30 text-purple-300 border border-purple-500/30 mb-3">TELUGU</span>
+            <h2 id="exp-title" class="font-display font-extrabold text-3xl sm:text-4xl text-white leading-tight">Select a Song</h2>
+            <p id="exp-artist" class="text-lg text-purple-300 font-medium mt-1">Artist Name</p>
+            <p id="exp-album" class="text-sm text-zinc-400 mt-1">Album • Year</p>
+          </div>
+
+          <!-- Audio Source Provider Notice -->
+          <div id="exp-provider-box" class="p-4 rounded-2xl bg-white/5 border border-white/10 text-left space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
+                <i data-lucide="radio" class="w-3.5 h-3.5"></i> Audio Stream Source
+              </span>
+              <span id="exp-license-tag" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-medium">Licensed Preview / Studio Synth</span>
+            </div>
+            <p id="exp-credits" class="text-xs text-zinc-300 leading-relaxed">Composer & Rights metadata.</p>
+          </div>
+
+          <!-- Expanded Controls -->
+          <div class="space-y-4">
+            <div class="space-y-1.5">
+              <input id="exp-progress" type="range" min="0" max="100" value="0" oninput="seekToPercent(this.value)" class="w-full accent-purple-500" />
+              <div class="flex justify-between text-xs text-zinc-400 font-mono">
+                <span id="exp-current-time">0:00</span>
+                <span id="exp-duration">0:00</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-center lg:justify-start gap-6">
+              <button onclick="toggleShuffle()" class="shuffle-btn p-2.5 rounded-full text-zinc-400 hover:text-white transition-colors">
+                <i data-lucide="shuffle" class="w-5 h-5"></i>
+              </button>
+              <button onclick="playPrevious()" class="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all">
+                <i data-lucide="skip-back" class="w-6 h-6"></i>
+              </button>
+              <button onclick="togglePlayPause()" class="play-pause-btn w-16 h-16 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] flex items-center justify-center text-white shadow-xl shadow-purple-600/40 hover:scale-105 transition-transform">
+                <i data-lucide="play" class="w-7 h-7 fill-current ml-0.5"></i>
+              </button>
+              <button onclick="playNext()" class="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all">
+                <i data-lucide="skip-forward" class="w-6 h-6"></i>
+              </button>
+              <button onclick="cycleRepeat()" class="repeat-btn p-2.5 rounded-full text-zinc-400 hover:text-white transition-colors">
+                <i data-lucide="repeat" class="w-5 h-5"></i>
+              </button>
+              <button onclick="toggleLikeCurrent()" id="exp-like-btn" class="p-2.5 rounded-full text-zinc-400 hover:text-pink-500 transition-colors">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-zinc-500">
+        Keyboard Shortcuts: <span class="text-zinc-300">Space</span> Play/Pause • <span class="text-zinc-300">←/→</span> Seek • <span class="text-zinc-300">M</span> Mute • <span class="text-zinc-300">L</span> Like
+      </div>
+    </div>
+
+    <!-- 3. PERSISTENT BOTTOM MUSIC PLAYER -->
+    <footer id="bottom-player" class="fixed bottom-0 inset-x-0 z-30 h-22 sm:h-24 glass-panel border-t border-white/10 px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+      <!-- LEFT: Track Info -->
+      <div class="flex items-center gap-3 w-1/3 min-w-[140px] max-w-xs">
+        <div onclick="toggleExpandedPlayer(true)" class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0 cursor-pointer group border border-white/10">
+          <img id="player-artwork" src="https://placehold.co/200x200/191923/8B5CF6?text=ROY'S+ERA" alt="Cover" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+            <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
+          </div>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5">
+            <h4 id="player-title" onclick="toggleExpandedPlayer(true)" class="text-sm font-bold text-white truncate cursor-pointer hover:text-purple-400 transition-colors">Welcome to ROY'S ERA</h4>
+          </div>
+          <p id="player-artist" class="text-xs text-zinc-400 truncate">Click any song to start streaming</p>
+        </div>
+        <button onclick="toggleLikeCurrent()" id="player-like-btn" class="p-2 rounded-full text-zinc-400 hover:text-pink-500 transition-colors flex-shrink-0" title="Like Song">
+          <i data-lucide="heart" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- CENTER: Playback Controls & Progress -->
+      <div class="flex flex-col items-center justify-center flex-1 max-w-xl">
+        <div class="flex items-center gap-3 sm:gap-5">
+          <button onclick="toggleShuffle()" title="Shuffle" class="shuffle-btn hidden sm:flex p-1.5 text-zinc-400 hover:text-white transition-colors">
+            <i data-lucide="shuffle" class="w-4 h-4"></i>
+          </button>
+          <button onclick="playPrevious()" title="Previous" class="p-1.5 text-zinc-300 hover:text-white transition-colors">
+            <i data-lucide="skip-back" class="w-5 h-5"></i>
+          </button>
+          <button onclick="togglePlayPause()" title="Play/Pause" class="play-pause-btn w-10 h-10 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] flex items-center justify-center text-white shadow-lg shadow-purple-600/30 hover:scale-105 transition-transform">
+            <i data-lucide="play" class="w-5 h-5 fill-current ml-0.5"></i>
+          </button>
+          <button onclick="playNext()" title="Next" class="p-1.5 text-zinc-300 hover:text-white transition-colors">
+            <i data-lucide="skip-forward" class="w-5 h-5"></i>
+          </button>
+          <button onclick="cycleRepeat()" title="Repeat" class="repeat-btn hidden sm:flex p-1.5 text-zinc-400 hover:text-white transition-colors relative">
+            <i data-lucide="repeat" class="w-4 h-4"></i>
+            <span id="repeat-one-badge" class="hidden absolute -top-1 -right-1 text-[9px] font-bold text-purple-400">1</span>
+          </button>
+        </div>
+
+        <!-- Scrubber Bar -->
+        <div class="w-full flex items-center gap-2.5 mt-1.5">
+          <span id="player-current-time" class="text-[11px] font-mono text-zinc-400 w-9 text-right">0:00</span>
+          <input id="player-progress" type="range" min="0" max="100" value="0" oninput="seekToPercent(this.value)" class="flex-1 h-1.5 bg-zinc-700 rounded-full accent-purple-500" />
+          <span id="player-duration" class="text-[11px] font-mono text-zinc-400 w-9">0:00</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Volume, Queue, Expand -->
+      <div class="hidden md:flex items-center justify-end gap-3 w-1/3 max-w-xs">
+        <button onclick="toggleQueueDrawer()" title="Queue" class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+          <i data-lucide="list-music" class="w-4 h-4"></i>
+        </button>
+        <div class="flex items-center gap-2 w-28">
+          <button onclick="toggleMute()" id="volume-icon-btn" class="text-zinc-400 hover:text-white">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+          </button>
+          <input id="volume-slider" type="range" min="0" max="100" value="80" oninput="setVolume(this.value)" class="w-full h-1 bg-zinc-700 rounded-full accent-purple-500" />
+        </div>
+        <button onclick="toggleExpandedPlayer(true)" title="Full-Screen Player" class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+          <i data-lucide="maximize-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODALS & TOAST NOTIFICATIONS -->
+  <div id="modal-container" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4"></div>
+  <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- APPLICATION LOGIC, DATABASE & AUDIO STREAMING ENGINE -->
+  <script>
+    /*************************************************************************
+     * 1. SUPABASE-COMPATIBLE RELATIONAL DATABASE LAYER (LOCAL PERSISTENCE)
+     * Mirrors tables: profiles, songs, artists, albums, playlists,
+     * playlist_songs, liked_songs, recently_played, follows, play_counts
+     *************************************************************************/
+    const DB_KEY = 'roys_era_db_v1';
+
+    // Generate clean SVG Data URI covers so artwork NEVER fails to load
+    function makeArtSVG(title, subtitle, c1, c2) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+        <defs>
+          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${c1}"/>
+            <stop offset="100%" stop-color="${c2}"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="400" fill="url(#g)"/>
+        <circle cx="320" cy="80" r="120" fill="rgba(255,255,255,0.08)"/>
+        <circle cx="70" cy="340" r="140" fill="rgba(0,0,0,0.22)"/>
+        <rect x="28" y="28" width="44" height="44" rx="12" fill="rgba(0,0,0,0.35)"/>
+        <path d="M42 54V42h4v12h-4zm7 4V38h4v20h-4zm7-6V44h4v8h-4z" fill="#fff"/>
+        <text x="32" y="295" fill="#ffffff" font-family="Inter, sans-serif" font-weight="800" font-size="30">${escapeXML(title.slice(0, 20))}</text>
+        <text x="32" y="330" fill="rgba(255,255,255,0.8)" font-family="Inter, sans-serif" font-weight="600" font-size="18">${escapeXML(subtitle.slice(0, 28))}</text>
+        <text x="32" y="366" fill="rgba(255,255,255,0.55)" font-family="Inter, sans-serif" font-weight="700" font-size="12" letter-spacing="2">ROY'S ERA EDITION</text>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    function escapeXML(str) {
+      return String(str).replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]));
+    }
+
+    // Verified Artists & Composers Catalog (Telugu Primary, Hindi & Tamil)
+    const INITIAL_ARTISTS = [
+      { id: 'art-sid', name: 'Sid Sriram', role: 'Playback Singer', languages: ['Telugu', 'Tamil'], followers: 1840000, bio: 'Indian-American Carnatic musician and renowned playback singer celebrated for soulful Telugu and Tamil romantic melodies.', colors: ['#8B5CF6', '#3B0764'] },
+      { id: 'art-mangli', name: 'Mangli', role: 'Folk & Playback Singer', languages: ['Telugu'], followers: 1290000, bio: 'Powerhouse Telugu playback singer and television presenter celebrated for chart-topping Telangana folk anthems and mass hits.', colors: ['#EC4899', '#831843'] },
+      { id: 'art-spb', name: 'S. P. Balasubrahmanyam', role: 'Legendary Singer', languages: ['Telugu', 'Tamil', 'Hindi'], followers: 3200000, bio: 'Padma Vibhushan awardee and legendary Indian playback singer who recorded over 40,000 songs across 16 languages.', colors: ['#F59E0B', '#78350F'] },
+      { id: 'art-chithra', name: 'K. S. Chithra', role: 'Legendary Singer', languages: ['Telugu', 'Tamil', 'Hindi'], followers: 2150000, bio: 'Known as the Nightingale of South India, winner of six National Film Awards for her timeless melodies.', colors: ['#10B981', '#064E3B'] },
+      { id: 'art-anurag', name: 'Anurag Kulkarni', role: 'Playback Singer', languages: ['Telugu'], followers: 980000, bio: 'Versatile Telugu playback singer trained in Hindustani classical music, known for romantic and energetic chartbusters.', colors: ['#6366F1', '#1E1B4B'] },
+      { id: 'art-dsp', name: 'Devi Sri Prasad', role: 'Music Composer', languages: ['Telugu', 'Tamil'], followers: 2450000, bio: 'Rockstar DSP, National Award-winning Telugu music composer known for electrifying mass beats and heartfelt melodies.', colors: ['#EF4444', '#7F1D1D'] },
+      { id: 'art-thaman', name: 'S. Thaman', role: 'Music Composer', languages: ['Telugu', 'Tamil'], followers: 2310000, bio: 'Leading contemporary Telugu film composer celebrated for high-octane background scores and viral dance anthems.', colors: ['#8B5CF6', '#EC4899'] },
+      { id: 'art-mmk', name: 'M. M. Keeravani', role: 'Academy Award Composer', languages: ['Telugu', 'Hindi'], followers: 2600000, bio: 'Oscar and Golden Globe-winning composer renowned for epic orchestral scores and classical Telugu compositions.', colors: ['#D97706', '#451A03'] },
+      { id: 'art-anirudh', name: 'Anirudh Ravichander', role: 'Music Composer & Singer', languages: ['Tamil', 'Telugu', 'Hindi'], followers: 2950000, bio: 'Youth sensation composer blending electronic bass drops with South Indian folk and romantic hooks.', colors: ['#06B6D4', '#164E63'] },
+      { id: 'art-arijit', name: 'Arijit Singh', role: 'Playback Singer', languages: ['Hindi'], followers: 4100000, bio: 'One of India’s most streamed vocalists, celebrated for emotive Bollywood romantic ballads and heartbreak tracks.', colors: ['#EC4899', '#4C0519'] },
+      { id: 'art-shreya', name: 'Shreya Ghoshal', role: 'Playback Singer', languages: ['Hindi', 'Telugu', 'Tamil'], followers: 3400000, bio: 'Five-time National Film Award winner admired for classical precision across Telugu, Hindi, and Tamil cinema.', colors: ['#A855F7', '#3B0764'] },
+      { id: 'art-arr', name: 'A. R. Rahman', role: 'Academy Award Composer', languages: ['Tamil', 'Hindi', 'Telugu'], followers: 3900000, bio: 'The Mozart of Madras, two-time Academy Award-winning composer pioneering world music and Indian cinema scores.', colors: ['#3B82F6', '#1E3A8A'] },
+      { id: 'art-ram', name: 'Ram Miriyala', role: 'Singer & Composer', languages: ['Telugu'], followers: 870000, bio: 'Indie-folk fusion sensation bringing soulful Telangana acoustic textures to mainstream Telugu cinema.', colors: ['#14B8A6', '#134E4A'] },
+      { id: 'art-chinmayi', name: 'Chinmayi Sripada', role: 'Playback Singer', languages: ['Telugu', 'Tamil', 'Hindi'], followers: 1420000, bio: 'Critically acclaimed vocalist celebrated for delicate romantic ballads and classical nuances.', colors: ['#F43F5E', '#881337'] }
+    ];
+
+    // Verified Albums & Soundtracks
+    const INITIAL_ALBUMS = [
+      { id: 'alb-deccan', title: 'Deccan Ragas: Roy’s Era Originals', composer: 'Roy’s Era Studio', language: 'Telugu', year: 2026, colors: ['#8B5CF6', '#EC4899'], description: 'Licensed original Telugu acoustic, folk, and Carnatic fusion compositions curated exclusively for ROY’S ERA.' },
+      { id: 'alb-pushpa', title: 'Tollywood Mass Anthems', composer: 'Devi Sri Prasad & S. Thaman', language: 'Telugu', year: 2025, colors: ['#EF4444', '#7C2D12'], description: 'High-energy Telugu celebration and hero introduction rhythms.' },
+      { id: 'alb-melody', title: 'Godavari Breeze — Telugu Melodies', composer: 'Mickey J Meyer & Sid Sriram', language: 'Telugu', year: 2025, colors: ['#06B6D4', '#1E3A8A'], description: 'Soulful acoustic love songs and serene riverside melodies.' },
+      { id: 'alb-telangana', title: 'Bathukamma & Telangana Folk', composer: 'Mangli & Ram Miriyala', language: 'Telugu', year: 2025, colors: ['#F59E0B', '#78350F'], description: 'Authentic Telangana & Andhra folk percussions and festive vocals.' },
+      { id: 'alb-devotional', title: 'Tirumala Suprabhatam & Bhakti', composer: 'S. P. Balasubrahmanyam & K. S. Chithra', language: 'Telugu', year: 2024, colors: ['#D97706', '#451A03'], description: 'Sacred devotional hymns dedicated to Lord Venkateswara, Lord Shiva, and Lord Hanuman.' },
+      { id: 'alb-bollywood', title: 'Midnight Mumbai — Hindi Romance', composer: 'Arijit Singh & Shreya Ghoshal', language: 'Hindi', year: 2025, colors: ['#EC4899', '#500724'], description: 'Heart-touching Bollywood acoustic and late-night drive ballads.' },
+      { id: 'alb-kollywood', title: 'Marina Waves — Tamil Hits', composer: 'Anirudh Ravichander & A. R. Rahman', language: 'Tamil', year: 2025, colors: ['#3B82F6', '#172554'], description: 'Chart-topping Tamil kuthu beats and soulful Chennai melodies.' }
+    ];
+
+    // Complete Song Catalog with Real Synthesis / Authorized Stream Metadata
+    // Each song uses our multi-provider audio engine (Real WebAudio/Tone.js procedural studio composition
+    // tailored to its exact raga/scale, tempo, and mood, plus support for uploaded/external authorized URLs)
+    const INITIAL_SONGS = [
+      // TELUGU ROMANTIC & MELODY
+      { id: 's-1', title: 'Manasu Maree (Acoustic Session)', artist: 'Sid Sriram', artistId: 'art-sid', composer: 'Devi Sri Prasad', album: 'Godavari Breeze — Telugu Melodies', albumId: 'alb-melody', language: 'Telugu', category: 'Romantic', mood: 'Romantic Mood', year: 2025, duration: 214, plays: 48920, synthPreset: 'telugu_romantic', licenseType: 'Licensed Studio Composition', colors: ['#8B5CF6', '#311042'] },
+      { id: 's-2', title: 'Godavari Vennela', artist: 'Anurag Kulkarni, Chinmayi Sripada', artistId: 'art-anurag', composer: 'Mickey J Meyer', album: 'Godavari Breeze — Telugu Melodies', albumId: 'alb-melody', language: 'Telugu', category: 'Melody', mood: 'Peaceful Music', year: 2025, duration: 238, plays: 39410, synthPreset: 'telugu_melody', licenseType: 'Licensed Studio Composition', colors: ['#06B6D4', '#1E3A8A'] },
+      { id: 's-3', title: 'Preminche Premava (Reprise)', artist: 'Sid Sriram, Shreya Ghoshal', artistId: 'art-sid', composer: 'A. R. Rahman', album: 'Deccan Ragas: Roy’s Era Originals', albumId: 'alb-deccan', language: 'Telugu', category: 'Romantic', mood: 'Romantic Mood', year: 2026, duration: 252, plays: 52100, synthPreset: 'telugu_romantic', licenseType: 'Roy’s Era Original Master', colors: ['#EC4899', '#4C0519'] },
+      { id: 's-4', title: 'Nuvvunte Naa Jathaga (Unplugged)', artist: 'Sid Sriram', artistId: 'art-sid', composer: 'A. R. Rahman', album: 'Godavari Breeze — Telugu Melodies', albumId: 'alb-melody', language: 'Telugu', category: 'Melody', mood: 'Relaxing Mood', year: 2024, duration: 226, plays: 44120, synthPreset: 'telugu_melody', licenseType: 'Licensed Preview Arrangement', colors: ['#7C3AED', '#1E1B4B'] },
+
+      // TELUGU LOVE FAILURE
+      { id: 's-5', title: 'Ontari Payanam (Heartbreak)', artist: 'Ram Miriyala', artistId: 'art-ram', composer: 'Ram Miriyala', album: 'Deccan Ragas: Roy’s Era Originals', albumId: 'alb-deccan', language: 'Telugu', category: 'Love Failure', mood: 'Heartbreak Mood', year: 2026, duration: 245, plays: 41800, synthPreset: 'sad_ballad', licenseType: 'Roy’s Era Original Master', colors: ['#4F46E5', '#0F172A'] },
+      { id: 's-6', title: 'Kanulalo Neeru', artist: 'Sid Sriram', artistId: 'art-sid', composer: 'Gopi Sundar', album: 'Godavari Breeze — Telugu Melodies', albumId: 'alb-melody', language: 'Telugu', category: 'Love Failure', mood: 'Sad Mood', year: 2025, duration: 219, plays: 36750, synthPreset: 'sad_ballad', licenseType: 'Licensed Studio Composition', colors: ['#334155', '#090D16'] },
+
+      // TELUGU MASS & FOLK
+      { id: 's-7', title: 'Deccan Mass Dhamaka', artist: 'Mangli, Rahul Sipligunj', artistId: 'art-mangli', composer: 'Devi Sri Prasad', album: 'Tollywood Mass Anthems', albumId: 'alb-pushpa', language: 'Telugu', category: 'Mass', mood: 'Party Mood', year: 2026, duration: 198, plays: 61500, synthPreset: 'telugu_mass', licenseType: 'Roy’s Era Original Master', colors: ['#EF4444', '#7F1D1D'] },
+      { id: 's-8', title: 'Bonalu Jathara Beat', artist: 'Mangli', artistId: 'art-mangli', composer: 'S. Thaman', album: 'Bathukamma & Telangana Folk', albumId: 'alb-telangana', language: 'Telugu', category: 'Folk', mood: 'Workout', year: 2025, duration: 208, plays: 55320, synthPreset: 'telugu_folk', licenseType: 'Licensed Folk Recording', colors: ['#F59E0B', '#78350F'] },
+      { id: 's-9', title: 'Ooru Palleturu (Telangana Soul)', artist: 'Ram Miriyala, Mangli', artistId: 'art-ram', composer: 'Ram Miriyala', album: 'Bathukamma & Telangana Folk', albumId: 'alb-telangana', language: 'Telugu', category: 'Folk', mood: 'Travel Mood', year: 2025, duration: 232, plays: 47290, synthPreset: 'telugu_folk', licenseType: 'Licensed Folk Recording', colors: ['#10B981', '#064E3B'] },
+      { id: 's-10', title: 'Simha Garjana (Hero Theme)', artist: 'Anurag Kulkarni', artistId: 'art-anurag', composer: 'S. Thaman', album: 'Tollywood Mass Anthems', albumId: 'alb-pushpa', language: 'Telugu', category: 'Mass', mood: 'Motivation', year: 2026, duration: 185, plays: 58900, synthPreset: 'telugu_mass', licenseType: 'Roy’s Era Original Master', colors: ['#DC2626', '#450A0A'] },
+
+      // TELUGU DEVOTIONAL & EVERGREEN CLASSICS
+      { id: 's-11', title: 'Om Namo Venkatesaya', artist: 'S. P. Balasubrahmanyam', artistId: 'art-spb', composer: 'M. M. Keeravani', album: 'Tirumala Suprabhatam & Bhakti', albumId: 'alb-devotional', language: 'Telugu', category: 'Devotional', mood: 'Peaceful Music', year: 2020, duration: 295, plays: 64200, synthPreset: 'devotional_raga', licenseType: 'Licensed Devotional Archive', colors: ['#D97706', '#451A03'] },
+      { id: 's-12', title: 'Shiva Tandava Stotram (Symphonic)', artist: 'M. M. Keeravani, K. S. Chithra', artistId: 'art-mmk', composer: 'M. M. Keeravani', album: 'Tirumala Suprabhatam & Bhakti', albumId: 'alb-devotional', language: 'Telugu', category: 'Devotional', mood: 'Motivation', year: 2024, duration: 274, plays: 49100, synthPreset: 'devotional_raga', licenseType: 'Licensed Devotional Archive', colors: ['#B45309', '#291504'] },
+      { id: 's-13', title: 'Swarna Kamalam (Evergreen Classic)', artist: 'S. P. Balasubrahmanyam, K. S. Chithra', artistId: 'art-spb', composer: 'M. M. Keeravani', album: 'Deccan Ragas: Roy’s Era Originals', albumId: 'alb-deccan', language: 'Telugu', category: 'Evergreen Classics', mood: 'Relaxing Mood', year: 1994, duration: 262, plays: 43800, synthPreset: 'telugu_melody', licenseType: 'Golden Era Remaster', colors: ['#A855F7', '#3B0764'] },
+      { id: 's-14', title: 'Veena Madhuri (Instrumental Raga)', artist: 'Devi Sri Prasad', artistId: 'art-dsp', composer: 'Devi Sri Prasad', album: 'Deccan Ragas: Roy’s Era Originals', albumId: 'alb-deccan', language: 'Telugu', category: 'Instrumental', mood: 'Rainy Day Music', year: 2026, duration: 204, plays: 31200, synthPreset: 'instrumental_veena', licenseType: 'Roy’s Era Original Master', colors: ['#8B5CF6', '#1E1B4B'] },
+
+      // HINDI COLLECTION
+      { id: 's-15', title: 'Raat Bhar Baarish', artist: 'Arijit Singh', artistId: 'art-arijit', composer: 'Arijit Singh', album: 'Midnight Mumbai — Hindi Romance', albumId: 'alb-bollywood', language: 'Hindi', category: 'Romantic', mood: 'Rainy Day Music', year: 2025, duration: 241, plays: 59800, synthPreset: 'hindi_romantic', licenseType: 'Licensed Studio Composition', colors: ['#EC4899', '#500724'] },
+      { id: 's-16', title: 'Sitaron Ki Mehfil', artist: 'Shreya Ghoshal, Arijit Singh', artistId: 'art-shreya', composer: 'A. R. Rahman', album: 'Midnight Mumbai — Hindi Romance', albumId: 'alb-bollywood', language: 'Hindi', category: 'Melody', mood: 'Night Drive', year: 2026, duration: 229, plays: 51400, synthPreset: 'hindi_romantic', licenseType: 'Licensed Studio Composition', colors: ['#9333EA', '#2E1065'] },
+      { id: 's-17', title: 'Adhura Safar (Sad Version)', artist: 'Arijit Singh', artistId: 'art-arijit', composer: 'Arijit Singh', album: 'Midnight Mumbai — Hindi Romance', albumId: 'alb-bollywood', language: 'Hindi', category: 'Sad Songs', mood: 'Heartbreak Mood', year: 2024, duration: 248, plays: 46900, synthPreset: 'sad_ballad', licenseType: 'Licensed Studio Composition', colors: ['#475569', '#0F172A'] },
+
+      // TAMIL COLLECTION
+      { id: 's-18', title: 'Kadhal Mazhai (Chennai Breeze)', artist: 'Sid Sriram, Chinmayi Sripada', artistId: 'art-sid', composer: 'A. R. Rahman', album: 'Marina Waves — Tamil Hits', albumId: 'alb-kollywood', language: 'Tamil', category: 'Romantic', mood: 'Romantic Mood', year: 2025, duration: 235, plays: 48200, synthPreset: 'telugu_romantic', licenseType: 'Licensed Studio Composition', colors: ['#3B82F6', '#172554'] },
+      { id: 's-19', title: 'Chennai Kuthu Storm', artist: 'Anirudh Ravichander', artistId: 'art-anirudh', composer: 'Anirudh Ravichander', album: 'Marina Waves — Tamil Hits', albumId: 'alb-kollywood', language: 'Tamil', category: 'Mass', mood: 'Party Mood', year: 2026, duration: 194, plays: 62700, synthPreset: 'telugu_mass', licenseType: 'Licensed Studio Composition', colors: ['#06B6D4', '#083344'] },
+      { id: 's-20', title: 'Isai Mazhai (Classical Fusion)', artist: 'K. S. Chithra, S. P. Balasubrahmanyam', artistId: 'art-chithra', composer: 'A. R. Rahman', album: 'Marina Waves — Tamil Hits', albumId: 'alb-kollywood', language: 'Tamil', category: 'Evergreen Classics', mood: 'Peaceful Music', year: 1998, duration: 256, plays: 41300, synthPreset: 'devotional_raga', licenseType: 'Golden Era Remaster', colors: ['#10B981', '#064E3B'] }
+    ];
+
+    // Hydrate artwork URLs dynamically
+    INITIAL_ARTISTS.forEach(a => { a.artwork = makeArtSVG(a.name, a.role, a.colors[0], a.colors[1]); });
+    INITIAL_ALBUMS.forEach(a => { a.artwork = makeArtSVG(a.title, a.composer, a.colors[0], a.colors[1]); });
+    INITIAL_SONGS.forEach(s => { s.artwork = makeArtSVG(s.title, s.artist, s.colors[0], s.colors[1]); });
+
+    function loadDB() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          // Re-attach SVG artwork if needed
+          parsed.songs.forEach(s => { if (!s.artwork) s.artwork = makeArtSVG(s.title, s.artist, '#8B5CF6', '#191923'); });
+          return parsed;
+        }
+      } catch (e) { console.warn('DB reset due to storage error:', e); }
+
+      const freshDB = {
+        currentUser: {
+          id: 'usr-roy',
+          name: 'Roy Listener',
+          email: 'listener@roysera.music',
+          role: 'admin',
+          plan: 'Premium Hi-Fi',
+          preferredLanguage: 'Telugu'
+        },
+        songs: INITIAL_SONGS,
+        artists: INITIAL_ARTISTS,
+        albums: INITIAL_ALBUMS,
+        likedSongs: ['s-1', 's-3', 's-7', 's-11'],
+        recentlyPlayed: ['s-1', 's-7', 's-15', 's-19'],
+        followedArtists: ['art-sid', 'art-mangli', 'art-spb', 'art-dsp'],
+        playlists: [
+          {
+            id: 'pl-1',
+            name: 'Telugu Midnight Melodies',
+            description: 'Soulful Sid Sriram, Anurag Kulkarni & DSP acoustic favorites.',
+            isPublic: true,
+            cover: makeArtSVG('Telugu Melodies', "Roy's Era Curated", '#8B5CF6', '#EC4899'),
+            songIds: ['s-1', 's-2', 's-3', 's-4', 's-13']
+          },
+          {
+            id: 'pl-2',
+            name: 'Tollywood Mass & Folk Power',
+            description: 'High-energy Mangli folk and DSP/Thaman celebration tracks.',
+            isPublic: true,
+            cover: makeArtSVG('Mass & Folk', 'High Energy Telugu', '#EF4444', '#F59E0B'),
+            songIds: ['s-7', 's-8', 's-9', 's-10']
+          }
+        ],
+        recentSearches: ['Sid Sriram', 'Mangli', 'Telugu Romantic', 'Arijit Singh'],
+        announcement: 'Welcome to ROY’S ERA — Stream Authorized Telugu, Hindi & Tamil Originals!'
+      };
+      saveDB(freshDB);
+      return freshDB;
+    }
+
+    function saveDB(data) {
+      try {
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error('Failed saving to local DB:', e);
+      }
+    }
+
+    let DB = loadDB();
+
+    /*************************************************************************
+     * 2. REAL MULTI-PROVIDER AUDIO STREAMING & STUDIO SYNTHESIS ENGINE
+     * Supports:
+     *  - Provider A: HTML5 Audio for user-uploaded or authorized external MP3/WAV
+     *  - Provider B: Tone.js Real-Time Procedural Raga & Beat Engine (ensures
+     *    100% genuine, musical, zero-dead-link playback for every catalog track!)
+     *************************************************************************/
+    const AudioEngine = {
+      isPlaying: false,
+      currentSong: null,
+      queue: [...DB.songs],
+      queueIndex: 0,
+      shuffle: false,
+      repeatMode: 'all', // 'off' | 'all' | 'one'
+      volume: 0.8,
+      isMuted: false,
+      elapsed: 0,
+      timerInterval: null,
+      toneReady: false,
+      synthLoop: null,
+      padSynth: null,
+      leadSynth: null,
+      bassSynth: null,
+      htmlAudio: new Audio(),
+      analyser: null,
+
+      async initTone() {
+        if (this.toneReady) return;
+        await Tone.start();
+        this.analyser = new Tone.Analyser('fft', 32);
+
+        const reverb = new Tone.Reverb({ decay: 2.8, wet: 0.32 }).toDestination();
+        reverb.connect(this.analyser);
+
+        this.padSynth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.4, decay: 0.8, sustain: 0.5, release: 1.5 }
+        }).connect(reverb);
+        this.padSynth.volume.value = -14;
+
+        this.leadSynth = new Tone.PluckSynth({
+          attackNoise: 1.2,
+          dampening: 3200,
+          resonance: 0.92
+        }).connect(reverb);
+        this.leadSynth.volume.value = -6;
+
+        this.bassSynth = new Tone.MembraneSynth({
+          pitchDecay: 0.04,
+          octaves: 4,
+          envelope: { attack: 0.005, decay: 0.25, sustain: 0.01, release: 0.4 }
+        }).connect(reverb);
+        this.bassSynth.volume.value = -10;
+
+        this.toneReady = true;
+      },
+
+      getMusicalScale(preset) {
+        // Authentic Indian Raga-inspired note sequences for procedural studio playback
+        const scales = {
+          telugu_romantic: { bpm: 88, notes: ['C4', 'D4', 'E4', 'G4', 'A4', 'C5', 'A4', 'G4'], chords: [['C3','E3','G3'], ['A2','C3','E3'], ['F2','A2','C3'], ['G2','B2','D3']], beat: false },
+          telugu_melody:   { bpm: 82, notes: ['D4', 'F#4', 'A4', 'B4', 'D5', 'B4', 'A4', 'F#4'], chords: [['D3','F#3','A3'], ['B2','D3','F#3'], ['G2','B2','D3'], ['A2','C#3','E3']], beat: false },
+          telugu_mass:     { bpm: 128, notes: ['E3', 'E3', 'G3', 'A3', 'B3', 'D4', 'B3', 'G3'], chords: [['E2','B2','E3'], ['G2','D3','G3'], ['A2','E3','A3'], ['B2','F#3','B3']], beat: true },
+          telugu_folk:     { bpm: 118, notes: ['G3', 'A3', 'B3', 'D4', 'E4', 'D4', 'B3', 'A3'], chords: [['G2','D3','G3'], ['C3','E3','G3'], ['D3','F#3','A3'], ['G2','B2','D3']], beat: true },
+          sad_ballad:      { bpm: 72, notes: ['A3', 'C4', 'E4', 'F4', 'E4', 'C4', 'B3', 'A3'], chords: [['A2','C3','E3'], ['F2','A2','C3'], ['D2','F2','A2'], ['E2','G#2','B2']], beat: false },
+          devotional_raga: { bpm: 76, notes: ['C4', 'Db4', 'E4', 'F4', 'G4', 'Ab4', 'B4', 'C5'], chords: [['C3','G3','C4'], ['F2','C3','F3'], ['C3','E3','G3'], ['G2','D3','G3']], beat: false },
+          instrumental_veena:{ bpm: 84, notes: ['D4', 'E4', 'G4', 'A4', 'C5', 'A4', 'G4', 'E4'], chords: [['D3','A3','D4'], ['C3','G3','C4'], ['A2','E3','A3'], ['D3','A3','D4']], beat: false },
+          hindi_romantic:  { bpm: 85, notes: ['F3', 'A3', 'C4', 'D4', 'E4', 'C4', 'A3', 'G3'], chords: [['F2','A2','C3'], ['D2','F2','A2'], ['Bb2','D3','F3'], ['C3','E3','G3']], beat: false }
+        };
+        return scales[preset] || scales.telugu_romantic;
+      },
+
+      async startSynthForSong(song) {
+        await this.initTone();
+        this.stopSynth();
+
+        const config = this.getMusicalScale(song.synthPreset);
+        Tone.Transport.bpm.value = config.bpm;
+        let step = 0;
+
+        this.synthLoop = new Tone.Loop((time) => {
+          const note = config.notes[step % config.notes.length];
+          this.leadSynth.triggerAttack(note, time);
+
+          if (step % 4 === 0) {
+            const chord = config.chords[Math.floor(step / 4) % config.chords.length];
+            this.padSynth.triggerAttackRelease(chord, '2n', time);
+          }
+
+          if (config.beat && (step % 2 === 0 || step % 8 === 7)) {
+            this.bassSynth.triggerAttackRelease('C2', '8n', time);
+          } else if (!config.beat && step % 4 === 0) {
+            this.bassSynth.triggerAttackRelease('C2', '4n', time);
+          }
+          step++;
+        }, '8n').start(0);
+
+        Tone.Transport.start();
+      },
+
+      stopSynth() {
+        if (this.synthLoop) {
+          this.synthLoop.stop();
+          this.synthLoop.dispose();
+          this.synthLoop = null;
+        }
+        if (this.toneReady) {
+          Tone.Transport.stop();
+        }
+      },
+
+      async playSong(songId, customQueue = null) {
+        const song = DB.songs.find(s => s.id === songId);
+        if (!song) return;
+
+        if (customQueue && Array.isArray(customQueue)) {
+          this.queue = customQueue;
+        }
+        const idx = this.queue.findIndex(s => s.id === songId);
+        if (idx !== -1) this.queueIndex = idx;
+
+        this.currentSong = song;
+        this.elapsed = 0;
+        this.isPlaying = true;
+
+        // Track play count & recently played in DB
+        song.plays = (song.plays || 0) + 1;
+        DB.recentlyPlayed = [song.id, ...DB.recentlyPlayed.filter(id => id !== song.id)].slice(0, 25);
+        saveDB(DB);
+
+        // Stop any existing HTML5 audio
+        this.htmlAudio.pause();
+        this.stopSynth();
+
+        if (song.audioUrl) {
+          // Real uploaded or authorized audio stream
+          this.htmlAudio.src = song.audioUrl;
+          this.htmlAudio.volume = this.isMuted ? 0 : this.volume;
+          try {
+            await this.htmlAudio.play();
+          } catch (err) {
+            showToast('External stream blocked; switching to Studio Audio Engine.', 'info');
+            await this.startSynthForSong(song);
+          }
+        } else {
+          // Real-Time Studio Audio Synthesis Engine
+          await this.startSynthForSong(song);
+        }
+
+        this.startProgressTimer();
+        updatePlayerUI();
+        renderQueue();
+        if (currentRoute.view === 'home' || currentRoute.view === 'recent') {
+          renderCurrentView();
+        }
+      },
+
+      async togglePlayPause() {
+        if (!this.currentSong) {
+          if (DB.songs.length > 0) {
+            await this.playSong(DB.songs[0].id);
+          }
+          return;
+        }
+
+        if (this.isPlaying) {
+          this.isPlaying = false;
+          if (this.currentSong.audioUrl) this.htmlAudio.pause();
+          else if (this.toneReady) Tone.Transport.pause();
+          clearInterval(this.timerInterval);
+        } else {
+          this.isPlaying = true;
+          if (this.currentSong.audioUrl) {
+            await this.htmlAudio.play();
+          } else {
+            if (!this.synthLoop) await this.startSynthForSong(this.currentSong);
+            else Tone.Transport.start();
+          }
+          this.startProgressTimer();
+        }
+        updatePlayerUI();
+      },
+
+      startProgressTimer() {
+        clearInterval(this.timerInterval);
+        this.timerInterval = setInterval(() => {
+          if (!this.isPlaying || !this.currentSong) return;
+
+          if (this.currentSong.audioUrl && !isNaN(this.htmlAudio.duration)) {
+            this.elapsed = Math.floor(this.htmlAudio.currentTime);
+            if (this.htmlAudio.ended) this.handleTrackEnd();
+          } else {
+            this.elapsed += 1;
+            if (this.elapsed >= this.currentSong.duration) {
+              this.handleTrackEnd();
+            }
+          }
+          updateProgressUI();
+        }, 1000);
+      },
+
+      handleTrackEnd() {
+        if (this.repeatMode === 'one') {
+          this.seekTo(0);
+          if (!this.currentSong.audioUrl) this.startSynthForSong(this.currentSong);
+          return;
+        }
+        this.next(true);
+      },
+
+      next(autoTriggered = false) {
+        if (this.queue.length === 0) return;
+        let nextIdx;
+        if (this.shuffle) {
+          nextIdx = Math.floor(Math.random() * this.queue.length);
+        } else {
+          nextIdx = this.queueIndex + 1;
+          if (nextIdx >= this.queue.length) {
+            if (this.repeatMode === 'all' || !autoTriggered) {
+              nextIdx = 0;
+            } else {
+              this.isPlaying = false;
+              this.stopSynth();
+              updatePlayerUI();
+              return;
+            }
+          }
+        }
+        this.playSong(this.queue[nextIdx].id);
+      },
+
+      previous() {
+        if (this.elapsed > 4) {
+          this.seekTo(0);
+          return;
+        }
+        if (this.queue.length === 0) return;
+        let prevIdx = this.queueIndex - 1;
+        if (prevIdx < 0) prevIdx = this.queue.length - 1;
+        this.playSong(this.queue[prevIdx].id);
+      },
+
+      seekTo(seconds) {
+        if (!this.currentSong) return;
+        this.elapsed = Math.max(0, Math.min(seconds, this.currentSong.duration));
+        if (this.currentSong.audioUrl && !isNaN(this.htmlAudio.duration)) {
+          this.htmlAudio.currentTime = this.elapsed;
+        }
+        updateProgressUI();
+      },
+
+      setVolume(val) {
+        this.volume = Math.max(0, Math.min(1, val));
+        this.isMuted = this.volume === 0;
+        this.htmlAudio.volume = this.volume;
+        if (this.toneReady) {
+          Tone.Destination.volume.value = this.isMuted ? -Infinity : Tone.gainToDb(this.volume);
+        }
+        updateVolumeIcon();
+      }
+    };
+
+    /*************************************************************************
+     * 3. PLAYER UI CONTROLS & VISUALIZER LOOP
+     *************************************************************************/
+    function formatTime(sec) {
+      const s = Math.floor(sec || 0);
+      const mins = Math.floor(s / 60);
+      const rem = s % 60;
+      return `${mins}:${rem < 10 ? '0' : ''}${rem}`;
+    }
+
+    function updatePlayerUI() {
+      const song = AudioEngine.currentSong;
+      const playBtns = document.querySelectorAll('.play-pause-btn');
+      playBtns.forEach(btn => {
+        btn.innerHTML = AudioEngine.isPlaying
+          ? `<i data-lucide="pause" class="w-5 h-5 fill-current"></i>`
+          : `<i data-lucide="play" class="w-5 h-5 fill-current ml-0.5"></i>`;
+      });
+
+      if (song) {
+        document.getElementById('player-artwork').src = song.artwork;
+        document.getElementById('player-title').textContent = song.title;
+        document.getElementById('player-artist').textContent = song.artist;
+        document.getElementById('player-duration').textContent = formatTime(song.duration);
+
+        // Expanded player sync
+        document.getElementById('exp-artwork').src = song.artwork;
+        document.getElementById('exp-title').textContent = song.title;
+        document.getElementById('exp-artist').textContent = song.artist;
+        document.getElementById('exp-album').textContent = `${song.album} • ${song.year}`;
+        document.getElementById('exp-lang-pill').textContent = song.language.toUpperCase();
+        document.getElementById('exp-license-tag').textContent = song.licenseType || 'Licensed Stream';
+        document.getElementById('exp-credits').textContent = `Music Composer: ${song.composer} • Category: ${song.category} • Mood: ${song.mood}`;
+        document.getElementById('exp-duration').textContent = formatTime(song.duration);
+
+        const isLiked = DB.likedSongs.includes(song.id);
+        ['player-like-btn', 'exp-like-btn'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.classList.toggle('text-pink-500', isLiked);
+            el.classList.toggle('text-zinc-400', !isLiked);
+            el.innerHTML = `<i data-lucide="heart" class="w-4 h-4 ${isLiked ? 'fill-pink-500' : ''}"></i>`;
+          }
+        });
+      }
+
+      // Shuffle & Repeat button indicators
+      document.querySelectorAll('.shuffle-btn').forEach(b => {
+        b.classList.toggle('text-purple-400', AudioEngine.shuffle);
+        b.classList.toggle('text-zinc-400', !AudioEngine.shuffle);
+      });
+      document.querySelectorAll('.repeat-btn').forEach(b => {
+        b.classList.toggle('text-purple-400', AudioEngine.repeatMode !== 'off');
+        b.classList.toggle('text-zinc-400', AudioEngine.repeatMode === 'off');
+      });
+      const repBadge = document.getElementById('repeat-one-badge');
+      if (repBadge) repBadge.classList.toggle('hidden', AudioEngine.repeatMode !== 'one');
+
+      updateProgressUI();
+      lucide.createIcons();
+    }
+
+    function updateProgressUI() {
+      const song = AudioEngine.currentSong;
+      const pct = song && song.duration > 0 ? (AudioEngine.elapsed / song.duration) * 100 : 0;
+      document.getElementById('player-progress').value = pct;
+      document.getElementById('exp-progress').value = pct;
+      document.getElementById('player-current-time').textContent = formatTime(AudioEngine.elapsed);
+      document.getElementById('exp-current-time').textContent = formatTime(AudioEngine.elapsed);
+    }
+
+    function togglePlayPause() { AudioEngine.togglePlayPause(); }
+    function playNext() { AudioEngine.next(false); }
+    function playPrevious() { AudioEngine.previous(); }
+    function seekToPercent(pct) {
+      if (!AudioEngine.currentSong) return;
+      const target = Math.floor((pct / 100) * AudioEngine.currentSong.duration);
+      AudioEngine.seekTo(target);
+    }
+    function setVolume(val) { AudioEngine.setVolume(val / 100); }
+    function toggleMute() {
+      AudioEngine.isMuted = !AudioEngine.isMuted;
+      AudioEngine.setVolume(AudioEngine.isMuted ? 0 : (AudioEngine.volume || 0.8));
+      document.getElementById('volume-slider').value = AudioEngine.isMuted ? 0 : AudioEngine.volume * 100;
+    }
+    function updateVolumeIcon() {
+      const btn = document.getElementById('volume-icon-btn');
+      if (!btn) return;
+      btn.innerHTML = (AudioEngine.isMuted || AudioEngine.volume === 0)
+        ? `<i data-lucide="volume-x" class="w-4 h-4 text-pink-400"></i>`
+        : `<i data-lucide="volume-2" class="w-4 h-4"></i>`;
+      lucide.createIcons();
+    }
+    function toggleShuffle() {
+      AudioEngine.shuffle = !AudioEngine.shuffle;
+      updatePlayerUI();
+      showToast(`Shuffle ${AudioEngine.shuffle ? 'Enabled' : 'Disabled'}`);
+    }
+    function cycleRepeat() {
+      const modes = ['off', 'all', 'one'];
+      AudioEngine.repeatMode = modes[(modes.indexOf(AudioEngine.repeatMode) + 1) % modes.length];
+      updatePlayerUI();
+      showToast(`Repeat: ${AudioEngine.repeatMode.toUpperCase()}`);
+    }
+
+    // Animated Canvas Visualizer for Expanded Player
+    function startVisualizerLoop() {
+      const canvas = document.getElementById('visualizer-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function draw() {
+        requestAnimationFrame(draw);
+        const w = canvas.width = canvas.offsetWidth || 300;
+        const h = canvas.height = canvas.offsetHeight || 64;
+        ctx.clearRect(0, 0, w, h);
+
+        const bars = 28;
+        const barWidth = (w / bars) - 3;
+        let fftValues = null;
+        if (AudioEngine.analyser && AudioEngine.isPlaying) {
+          fftValues = AudioEngine.analyser.getValue();
+        }
+
+        for (let i = 0; i < bars; i++) {
+          let barHeight = 6;
+          if (AudioEngine.isPlaying) {
+            if (fftValues && fftValues[i] !== undefined && isFinite(fftValues[i])) {
+              const norm = Math.max(0, (fftValues[i] + 100) / 80);
+              barHeight = Math.max(8, norm * h * 0.95);
+            } else {
+              barHeight = 10 + Math.abs(Math.sin(Date.now() * 0.005 + i * 0.45)) * (h - 16);
+            }
+          }
+          const grad = ctx.createLinearGradient(0, h - barHeight, 0, h);
+          grad.addColorStop(0, '#EC4899');
+          grad.addColorStop(1, '#8B5CF6');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.roundRect(i * (barWidth + 3), h - barHeight, barWidth, barHeight, 4);
+          ctx.fill();
+        }
+      }
+      draw();
+    }
+
+    /*************************************************************************
+     * 4. USER ACTIONS: LIKES, PLAYLISTS, QUEUE, AUTH, SLEEP TIMER
+     *************************************************************************/
+    function toggleLikeSong(songId, event) {
+      if (event) event.stopPropagation();
+      const idx = DB.likedSongs.indexOf(songId);
+      if (idx === -1) {
+        DB.likedSongs.unshift(songId);
+        showToast('Added to Liked Songs ❤️');
+      } else {
+        DB.likedSongs.splice(idx, 1);
+        showToast('Removed from Liked Songs');
+      }
+      saveDB(DB);
+      updateSidebarCounts();
+      updatePlayerUI();
+      renderCurrentView();
+    }
+
+    function toggleLikeCurrent() {
+      if (AudioEngine.currentSong) {
+        toggleLikeSong(AudioEngine.currentSong.id);
+      }
+    }
+
+    function addToQueue(songId, playNextFlag = false, event = null) {
+      if (event) event.stopPropagation();
+      const song = DB.songs.find(s => s.id === songId);
+      if (!song) return;
+
+      if (playNextFlag) {
+        AudioEngine.queue.splice(AudioEngine.queueIndex + 1, 0, song);
+        showToast(`"${song.title}" will play next`);
+      } else {
+        AudioEngine.queue.push(song);
+        showToast(`Added "${song.title}" to queue`);
+      }
+      renderQueue();
+    }
+
+    function removeFromQueue(index) {
+      if (index === AudioEngine.queueIndex) return;
+      AudioEngine.queue.splice(index, 1);
+      if (index < AudioEngine.queueIndex) AudioEngine.queueIndex--;
+      renderQueue();
+    }
+
+    function renderQueue() {
+      const container = document.getElementById('queue-content');
+      if (!container) return;
+
+      const current = AudioEngine.currentSong;
+      const upNext = AudioEngine.queue.slice(AudioEngine.queueIndex + 1);
+
+      container.innerHTML = `
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">Now Playing</p>
+          ${current ? `
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-purple-600/20 border border-purple-500/30">
+              <img src="${current.artwork}" class="w-11 h-11 rounded-lg object-cover" />
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-white truncate">${current.title}</p>
+                <p class="text-xs text-purple-300 truncate">${current.artist}</p>
+              </div>
+              <div class="flex items-end gap-0.5 h-4">
+                <span class="w-1 bg-pink-500 rounded-full eq-bar-1"></span>
+                <span class="w-1 bg-purple-400 rounded-full eq-bar-2"></span>
+                <span class="w-1 bg-pink-500 rounded-full eq-bar-3"></span>
+              </div>
+            </div>
+          ` : '<p class="text-xs text-zinc-500">Nothing playing right now.</p>'}
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Up Next (${upNext.length})</p>
+          </div>
+          <div class="space-y-1.5">
+            ${upNext.map((s, idx) => {
+              const realIdx = AudioEngine.queueIndex + 1 + idx;
+              return `
+                <div onclick="AudioEngine.playSong('${s.id}')" class="flex items-center justify-between gap-2 p-2 rounded-xl hover:bg-white/5 cursor-pointer group">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <img src="${s.artwork}" class="w-9 h-9 rounded-lg object-cover" />
+                    <div class="min-w-0">
+                      <p class="text-xs font-semibold text-white truncate group-hover:text-purple-400">${s.title}</p>
+                      <p class="text-[11px] text-zinc-400 truncate">${s.artist}</p>
+                    </div>
+                  </div>
+                  <button onclick="event.stopPropagation(); removeFromQueue(${realIdx})" class="opacity-0 group-hover:opacity-100 p-1 text-zinc-500 hover:text-red-400" title="Remove">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function openCreatePlaylistModal() {
+      showModal(`
+        <div class="bg-[#191923] border border-white/15 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-lg">Create New Playlist</h3>
+            <button onclick="closeModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="text-xs font-semibold text-zinc-400 block mb-1">Playlist Name</label>
+              <input id="new-pl-name" type="text" placeholder="e.g., Vijayawada Night Drive Telugu" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500" />
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-zinc-400 block mb-1">Description</label>
+              <textarea id="new-pl-desc" rows="2" placeholder="Describe the vibe..." class="w-full bg-[#101014] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+              <input id="new-pl-public" type="checkbox" checked class="accent-purple-600 rounded" /> Make playlist public on ROY'S ERA
+            </label>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm text-zinc-400 hover:bg-white/5">Cancel</button>
+            <button onclick="createPlaylistSubmit()" class="px-5 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white shadow-lg">Create Playlist</button>
+          </div>
+        </div>
+      `);
+    }
+
+    function createPlaylistSubmit() {
+      const name = document.getElementById('new-pl-name').value.trim();
+      const desc = document.getElementById('new-pl-desc').value.trim();
+      const isPublic = document.getElementById('new-pl-public').checked;
+      if (!name) {
+        showToast('Please enter a playlist name', 'error');
+        return;
+      }
+      const newPl = {
+        id: 'pl-' + Date.now(),
+        name,
+        description: desc || 'Custom playlist on ROY’S ERA',
+        isPublic,
+        cover: makeArtSVG(name, DB.currentUser ? DB.currentUser.name : 'Personal Mix', '#8B5CF6', '#EC4899'),
+        songIds: []
+      };
+      DB.playlists.unshift(newPl);
+      saveDB(DB);
+      updateSidebarCounts();
+      closeModal();
+      showToast(`Created playlist "${name}"`);
+      navigate('playlist', newPl.id);
+    }
+
+    function openAddToPlaylistModal(songId, event) {
+      if (event) event.stopPropagation();
+      const song = DB.songs.find(s => s.id === songId);
+      if (!song) return;
+
+      showModal(`
+        <div class="bg-[#191923] border border-white/15 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-lg">Add to Playlist</h3>
+            <button onclick="closeModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+          </div>
+          <p class="text-xs text-zinc-400">Select a playlist for <span class="text-white font-semibold">${song.title}</span>:</p>
+          <div class="space-y-2 max-h-60 overflow-y-auto">
+            ${DB.playlists.map(pl => `
+              <button onclick="addSongToPlaylist('${pl.id}', '${song.id}')" class="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 transition-all text-left">
+                <div>
+                  <p class="text-sm font-semibold text-white">${pl.name}</p>
+                  <p class="text-xs text-zinc-400">${pl.songIds.length} songs</p>
+                </div>
+                <i data-lucide="plus" class="w-4 h-4 text-purple-400"></i>
+              </button>
+            `).join('')}
+          </div>
+          <button onclick="closeModal(); openCreatePlaylistModal();" class="w-full py-2.5 rounded-xl border border-dashed border-purple-500/50 text-purple-400 text-xs font-semibold hover:bg-purple-500/10">
+            + Create New Playlist
+          </button>
+        </div>
+      `);
+    }
+
+    function addSongToPlaylist(playlistId, songId) {
+      const pl = DB.playlists.find(p => p.id === playlistId);
+      if (!pl) return;
+      if (!pl.songIds.includes(songId)) {
+        pl.songIds.push(songId);
+        saveDB(DB);
+        updateSidebarCounts();
+        showToast(`Added to "${pl.name}"`);
+      } else {
+        showToast('Song is already in this playlist');
+      }
+      closeModal();
+      if (currentRoute.view === 'playlist') renderCurrentView();
+    }
+
+    function removeSongFromPlaylist(playlistId, songId) {
+      const pl = DB.playlists.find(p => p.id === playlistId);
+      if (!pl) return;
+      pl.songIds = pl.songIds.filter(id => id !== songId);
+      saveDB(DB);
+      updateSidebarCounts();
+      showToast('Removed song from playlist');
+      renderCurrentView();
+    }
+
+    function deletePlaylist(playlistId) {
+      DB.playlists = DB.playlists.filter(p => p.id !== playlistId);
+      saveDB(DB);
+      updateSidebarCounts();
+      showToast('Playlist deleted');
+      navigate('library');
+    }
+
+    function toggleFollowArtist(artistId) {
+      const idx = DB.followedArtists.indexOf(artistId);
+      if (idx === -1) {
+        DB.followedArtists.push(artistId);
+        showToast('Following artist');
+      } else {
+        DB.followedArtists.splice(idx, 1);
+        showToast('Unfollowed artist');
+      }
+      saveDB(DB);
+      renderCurrentView();
+    }
+
+    function shareSong(songId, event) {
+      if (event) event.stopPropagation();
+      const song = DB.songs.find(s => s.id === songId);
+      if (!song) return;
+      const shareText = `Listen to "${song.title}" by ${song.artist} on ROY'S ERA — Feel the Music. Live the Moment.`;
+      copyTextToClipboard(shareText);
+      showToast('Song link & details copied to clipboard!');
+    }
+
+    function shareCurrentSong() {
+      if (AudioEngine.currentSong) shareSong(AudioEngine.currentSong.id);
+    }
+
+    function copyTextToClipboard(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    // Sleep Timer
+    let sleepMinutes = 0;
+    let sleepTimeout = null;
+    function cycleSleepTimer() {
+      const options = [0, 15, 30, 60];
+      sleepMinutes = options[(options.indexOf(sleepMinutes) + 1) % options.length];
+      clearTimeout(sleepTimeout);
+      const badge = document.getElementById('sleep-badge');
+      if (sleepMinutes === 0) {
+        badge.classList.add('hidden');
+        showToast('Sleep timer turned off');
+      } else {
+        badge.textContent = sleepMinutes + 'm';
+        badge.classList.remove('hidden');
+        showToast(`Sleep timer set for ${sleepMinutes} minutes`);
+        sleepTimeout = setTimeout(() => {
+          if (AudioEngine.isPlaying) AudioEngine.togglePlayPause();
+          sleepMinutes = 0;
+          badge.classList.add('hidden');
+          showToast('Sleep timer paused playback. Goodnight!');
+        }, sleepMinutes * 60 * 1000);
+      }
+    }
+
+    /*************************************************************************
+     * 5. REUSABLE UI COMPONENTS (SONG CARDS, ARTIST CARDS, ALBUM CARDS)
+     *************************************************************************/
+    function renderSongCard(song, queueContext = DB.songs) {
+      const isLiked = DB.likedSongs.includes(song.id);
+      const isCurrent = AudioEngine.currentSong && AudioEngine.currentSong.id === song.id;
+      const isPlaying = isCurrent && AudioEngine.isPlaying;
+
+      return `
+        <div onclick="AudioEngine.playSong('${song.id}', currentContextQueue)" class="group bg-[#191923] hover:bg-[#222230] border ${isCurrent ? 'border-purple-500/60 shadow-lg shadow-purple-900/20' : 'border-white/5'} rounded-2xl p-3.5 transition-all duration-300 cursor-pointer flex flex-col justify-between">
+          <div>
+            <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-zinc-900">
+              <img src="${song.artwork}" alt="${song.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold bg-black/70 backdrop-blur-md text-purple-300 border border-white/10">
+                ${song.language}
+              </span>
+              <button onclick="event.stopPropagation(); AudioEngine.playSong('${song.id}', currentContextQueue)" class="absolute bottom-2.5 right-2.5 w-11 h-11 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white flex items-center justify-center shadow-xl ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} transition-all duration-300 hover:scale-105">
+                <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="w-5 h-5 fill-current ${isPlaying ? '' : 'ml-0.5'}"></i>
+              </button>
+            </div>
+            <h4 class="font-bold text-sm ${isCurrent ? 'text-purple-400' : 'text-white'} truncate group-hover:text-purple-300 transition-colors">${song.title}</h4>
+            <p onclick="event.stopPropagation(); navigate('artist', '${song.artistId}')" class="text-xs text-zinc-400 hover:text-white hover:underline truncate mt-0.5">${song.artist}</p>
+            <p onclick="event.stopPropagation(); navigate('album', '${song.albumId}')" class="text-[11px] text-zinc-500 hover:text-zinc-300 truncate mt-0.5">${song.album} • ${song.year}</p>
+          </div>
+
+          <div class="flex items-center justify-between pt-3 mt-3 border-t border-white/5 text-zinc-400">
+            <span class="text-[11px] font-mono">${formatTime(song.duration)}</span>
+            <div class="flex items-center gap-1">
+              <button onclick="toggleLikeSong('${song.id}', event)" title="Like" class="p-1.5 rounded-lg hover:bg-white/10 ${isLiked ? 'text-pink-500' : 'hover:text-pink-400'}">
+                <i data-lucide="heart" class="w-3.5 h-3.5 ${isLiked ? 'fill-pink-500' : ''}"></i>
+              </button>
+              <button onclick="openAddToPlaylistModal('${song.id}', event)" title="Add to Playlist" class="p-1.5 rounded-lg hover:bg-white/10 hover:text-white">
+                <i data-lucide="list-plus" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="addToQueue('${song.id}', false, event)" title="Add to Queue" class="p-1.5 rounded-lg hover:bg-white/10 hover:text-purple-400">
+                <i data-lucide="plus-square" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="shareSong('${song.id}', event)" title="Share" class="p-1.5 rounded-lg hover:bg-white/10 hover:text-white">
+                <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSongRow(song, index, playlistId = null) {
+      const isLiked = DB.likedSongs.includes(song.id);
+      const isCurrent = AudioEngine.currentSong && AudioEngine.currentSong.id === song.id;
+
+      return `
+        <div onclick="AudioEngine.playSong('${song.id}', currentContextQueue)" class="grid grid-cols-12 items-center gap-3 px-3 sm:px-4 py-2.5 rounded-xl hover:bg-white/5 ${isCurrent ? 'bg-purple-600/15 border border-purple-500/30' : ''} transition-colors cursor-pointer group">
+          <div class="col-span-1 text-xs font-mono text-zinc-500 group-hover:text-white">
+            ${isCurrent && AudioEngine.isPlaying ? '<span class="text-purple-400 font-bold">▶</span>' : index + 1}
+          </div>
+          <div class="col-span-6 sm:col-span-5 flex items-center gap-3 min-w-0">
+            <img src="${song.artwork}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+            <div class="min-w-0">
+              <p class="text-sm font-semibold ${isCurrent ? 'text-purple-400' : 'text-white'} truncate">${song.title}</p>
+              <p onclick="event.stopPropagation(); navigate('artist', '${song.artistId}')" class="text-xs text-zinc-400 hover:underline truncate">${song.artist}</p>
+            </div>
+          </div>
+          <div class="hidden md:block col-span-3 text-xs text-zinc-400 truncate hover:text-white" onclick="event.stopPropagation(); navigate('album', '${song.albumId}')">
+            ${song.album}
+          </div>
+          <div class="hidden sm:block col-span-1">
+            <span class="text-[10px] px-2 py-0.5 rounded bg-white/5 text-zinc-300">${song.language}</span>
+          </div>
+          <div class="col-span-5 sm:col-span-2 flex items-center justify-end gap-1.5 text-zinc-400">
+            <button onclick="toggleLikeSong('${song.id}', event)" class="p-1.5 rounded-lg hover:bg-white/10 ${isLiked ? 'text-pink-500' : ''}">
+              <i data-lucide="heart" class="w-3.5 h-3.5 ${isLiked ? 'fill-pink-500' : ''}"></i>
+            </button>
+            <button onclick="openAddToPlaylistModal('${song.id}', event)" class="p-1.5 rounded-lg hover:bg-white/10 hover:text-white">
+              <i data-lucide="list-plus" class="w-3.5 h-3.5"></i>
+            </button>
+            ${playlistId ? `
+              <button onclick="event.stopPropagation(); removeSongFromPlaylist('${playlistId}', '${song.id}')" title="Remove from Playlist" class="p-1.5 rounded-lg hover:bg-red-500/20 text-red-400">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            ` : ''}
+            <span class="text-xs font-mono ml-1">${formatTime(song.duration)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderArtistCard(artist) {
+      return `
+        <div onclick="navigate('artist', '${artist.id}')" class="group bg-[#191923] hover:bg-[#222230] border border-white/5 rounded-2xl p-4 text-center cursor-pointer transition-all duration-300">
+          <div class="w-24 h-24 sm:w-28 sm:h-28 mx-auto rounded-full overflow-hidden mb-3 border-2 border-purple-500/30 group-hover:border-pink-500 transition-colors shadow-lg">
+            <img src="${artist.artwork}" alt="${artist.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          </div>
+          <h4 class="font-bold text-sm text-white truncate group-hover:text-purple-300">${artist.name}</h4>
+          <p class="text-xs text-zinc-400 truncate mt-0.5">${artist.role}</p>
+          <span class="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-purple-500/15 text-purple-300">
+            ${artist.languages.join(' • ')}
+          </span>
+        </div>
+      `;
+    }
+
+    function renderAlbumCard(album) {
+      return `
+        <div onclick="navigate('album', '${album.id}')" class="group bg-[#191923] hover:bg-[#222230] border border-white/5 rounded-2xl p-3.5 cursor-pointer transition-all duration-300">
+          <div class="relative aspect-square rounded-xl overflow-hidden mb-3">
+            <img src="${album.artwork}" alt="${album.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <span class="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-bold text-white">${album.year}</span>
+          </div>
+          <h4 class="font-bold text-sm text-white truncate group-hover:text-purple-400">${album.title}</h4>
+          <p class="text-xs text-zinc-400 truncate mt-0.5">${album.composer}</p>
+          <p class="text-[11px] text-purple-400 font-medium mt-1">${album.language} Soundtrack</p>
+        </div>
+      `;
+    }
+
+    /*************************************************************************
+     * 6. PAGE ROUTER & VIEWS (HOMEPAGE, TELUGU/HINDI/TAMIL HUBS, ARTISTS,
+     * ALBUMS, MOODS, SEARCH, USER DASHBOARD, ADMIN STUDIO)
+     *************************************************************************/
+    let currentRoute = { view: 'home', param: null };
+    let currentContextQueue = DB.songs;
+
+    function navigate(view, param = null) {
+      currentRoute = { view, param };
+      toggleMobileSidebar(false);
+
+      // Update active nav highlighting
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const navKey = btn.getAttribute('data-nav');
+        const isActive = (navKey === view) || (view === 'language' && navKey === `lang-${param}`);
+        btn.className = isActive
+          ? 'nav-btn w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-white bg-purple-600/20 border border-purple-500/30'
+          : 'nav-btn w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all';
+      });
+
+      renderCurrentView();
+      document.getElementById('main-view').scrollTop = 0;
+    }
+
+    function getGreeting() {
+      const hr = new Date().getHours();
+      if (hr < 12) return 'Good Morning';
+      if (hr < 17) return 'Good Afternoon';
+      return 'Good Evening';
+    }
+
+    function getRecommendedSongs() {
+      // Personalized Recommendation Engine based on liked songs, preferred language & play history
+      const prefLang = DB.currentUser?.preferredLanguage || 'Telugu';
+      const likedArtists = new Set(
+        DB.songs.filter(s => DB.likedSongs.includes(s.id)).map(s => s.artistId)
+      );
+      return [...DB.songs].sort((a, b) => {
+        let scoreA = (a.language === prefLang ? 30 : 0) + (likedArtists.has(a.artistId) ? 25 : 0) + (a.plays / 5000);
+        let scoreB = (b.language === prefLang ? 30 : 0) + (likedArtists.has(b.artistId) ? 25 : 0) + (b.plays / 5000);
+        return scoreB - scoreA;
+      }).slice(0, 6);
+    }
+
+    function renderCurrentView() {
+      const main = document.getElementById('main-view');
+      const { view, param } = currentRoute;
+
+      if (view === 'home') {
+        const trendingTelugu = DB.songs.filter(s => s.language === 'Telugu').sort((a, b) => b.plays - a.plays);
+        const popularHindi = DB.songs.filter(s => s.language === 'Hindi');
+        const popularTamil = DB.songs.filter(s => s.language === 'Tamil');
+        const teluguSingers = DB.artists.filter(a => a.languages.includes('Telugu')).slice(0, 6);
+        const recentSongs = DB.recentlyPlayed.map(id => DB.songs.find(s => s.id === id)).filter(Boolean).slice(0, 5);
+        const recommended = getRecommendedSongs();
+        const romanticSongs = DB.songs.filter(s => s.category === 'Romantic');
+        const loveFailureSongs = DB.songs.filter(s => s.category === 'Love Failure');
+        const melodySongs = DB.songs.filter(s => s.category === 'Melody');
+        const massSongs = DB.songs.filter(s => s.category === 'Mass');
+        const folkSongs = DB.songs.filter(s => s.category === 'Folk');
+        const devotionalSongs = DB.songs.filter(s => s.category === 'Devotional');
+        const classicSongs = DB.songs.filter(s => s.category === 'Evergreen Classics' || s.category === 'Instrumental');
+
+        currentContextQueue = DB.songs;
+
+        main.innerHTML = `
+          <!-- HERO WELCOME BANNER -->
+          <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#261447] via-[#1B1530] to-[#2E1032] border border-purple-500/25 p-6 sm:p-10 shadow-2xl">
+            <div class="relative z-10 max-w-2xl space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-semibold text-purple-200 border border-white/10">
+                <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span> ${getGreeting()}, ${DB.currentUser ? DB.currentUser.name : 'Music Lover'}
+              </div>
+              <h1 class="font-display font-extrabold text-3xl sm:text-5xl tracking-tight neon-text-gradient leading-tight">
+                Welcome to ROY'S ERA
+              </h1>
+              <p class="text-base sm:text-lg text-zinc-200 font-medium">
+                Your Music. Your Mood. Your Era. <span class="text-purple-300">Stream premier Telugu, Hindi & Tamil collections.</span>
+              </p>
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="AudioEngine.playSong('${trendingTelugu[0]?.id || 's-1'}')" class="px-6 py-3 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white font-bold text-sm shadow-lg shadow-purple-600/40 hover:scale-105 transition-transform flex items-center gap-2">
+                  <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play Trending Telugu
+                </button>
+                <button onclick="navigate('language', 'Telugu')" class="px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/10 transition-all">
+                  Explore Telugu Hub
+                </button>
+              </div>
+            </div>
+            <!-- Decorative Glow -->
+            <div class="absolute -right-16 -bottom-16 w-72 h-72 rounded-full bg-purple-600/30 blur-3xl pointer-events-none"></div>
+            <div class="absolute right-12 top-6 w-48 h-48 rounded-full bg-pink-600/20 blur-2xl pointer-events-none"></div>
+          </section>
+
+          <!-- QUICK LANGUAGE & MOOD PILLS -->
+          <section class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1">
+            ${['Telugu', 'Hindi', 'Tamil'].map(lang => `
+              <button onclick="navigate('language', '${lang}')" class="px-4 py-2 rounded-full bg-[#191923] hover:bg-purple-600/30 border border-white/10 text-xs font-bold whitespace-nowrap transition-all">
+                🎵 ${lang} Collection
+              </button>
+            `).join('')}
+            ${['Romantic Mood', 'Heartbreak Mood', 'Party Mood', 'Peaceful Music', 'Night Drive', 'Rainy Day Music'].map(mood => `
+              <button onclick="navigate('mood', '${mood}')" class="px-4 py-2 rounded-full bg-[#191923] hover:bg-pink-600/25 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white whitespace-nowrap transition-all">
+                ${mood}
+              </button>
+            `).join('')}
+          </section>
+
+          <!-- 2 & 3. TRENDING & MOST PLAYED TELUGU SONGS -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="font-display font-bold text-xl sm:text-2xl">Trending & Most Played Telugu Songs</h2>
+                <p class="text-xs text-zinc-400">Ranked by real platform play counts on ROY'S ERA</p>
+              </div>
+              <button onclick="navigate('language', 'Telugu')" class="text-xs font-bold text-purple-400 hover:text-purple-300">See All Telugu →</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              ${trendingTelugu.slice(0, 5).map(s => renderSongCard(s, trendingTelugu)).join('')}
+            </div>
+          </section>
+
+          <!-- 6. TOP TELUGU SINGERS & COMPOSERS -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display font-bold text-xl sm:text-2xl">Top Telugu Singers & Composers</h2>
+              <button onclick="navigate('artists')" class="text-xs font-bold text-purple-400 hover:text-purple-300">All Artists →</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              ${teluguSingers.map(a => renderArtistCard(a)).join('')}
+            </div>
+          </section>
+
+          <!-- 9. RECOMMENDED FOR YOU -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="font-display font-bold text-xl sm:text-2xl">Recommended For You</h2>
+                <p class="text-xs text-zinc-400">Tailored to your preferred language (${DB.currentUser?.preferredLanguage || 'Telugu'}) & liked artists</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              ${recommended.map(s => renderSongCard(s, recommended)).join('')}
+            </div>
+          </section>
+
+          <!-- 7. FEATURED ALBUMS -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display font-bold text-xl sm:text-2xl">Featured Albums & Soundtracks</h2>
+              <button onclick="navigate('albums')" class="text-xs font-bold text-purple-400 hover:text-purple-300">All Albums →</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${DB.albums.slice(0, 4).map(a => renderAlbumCard(a)).join('')}
+            </div>
+          </section>
+
+          <!-- 10, 11, 12. TELUGU GENRE SPOTLIGHTS: ROMANTIC, LOVE FAILURE & MELODY -->
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl sm:text-2xl">Romantic & Soulful Melodies</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              ${[...romanticSongs, ...melodySongs].slice(0, 5).map(s => renderSongCard(s)).join('')}
+            </div>
+          </section>
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl sm:text-2xl">Heartbreak & Love Failure Collection</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${loveFailureSongs.map(s => renderSongCard(s)).join('')}
+            </div>
+          </section>
+
+          <!-- 13, 14, 15. MASS, FOLK & DEVOTIONAL -->
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl sm:text-2xl">Telugu Mass, Folk & Devotional</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              ${[...massSongs, ...folkSongs, ...devotionalSongs].slice(0, 6).map(s => renderSongCard(s)).join('')}
+            </div>
+          </section>
+
+          <!-- 4 & 5. POPULAR HINDI & TAMIL COLLECTIONS -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <section class="bg-[#191923]/60 border border-white/5 rounded-3xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-lg">Popular Hindi Songs</h3>
+                <button onclick="navigate('language', 'Hindi')" class="text-xs font-bold text-pink-400">Explore Hindi →</button>
+              </div>
+              <div class="space-y-1">
+                ${popularHindi.map((s, i) => renderSongRow(s, i)).join('')}
+              </div>
+            </section>
+
+            <section class="bg-[#191923]/60 border border-white/5 rounded-3xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-lg">Popular Tamil Songs</h3>
+                <button onclick="navigate('language', 'Tamil')" class="text-xs font-bold text-amber-400">Explore Tamil →</button>
+              </div>
+              <div class="space-y-1">
+                ${popularTamil.map((s, i) => renderSongRow(s, i)).join('')}
+              </div>
+            </section>
+          </div>
+
+          <!-- 16 & 17. EVERGREEN CLASSICS & INSTRUMENTAL -->
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl sm:text-2xl">Evergreen Classics & Instrumental Ragas</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${classicSongs.map(s => renderSongCard(s)).join('')}
+            </div>
+          </section>
+
+          <!-- 8 & 18. RECENTLY PLAYED & YOUR PLAYLISTS -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display font-bold text-xl sm:text-2xl">Recently Played</h2>
+              <button onclick="navigate('recent')" class="text-xs font-bold text-purple-400">Full History →</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              ${recentSongs.map(s => renderSongCard(s, recentSongs)).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'language') {
+        const lang = param || 'Telugu';
+        const langSongs = DB.songs.filter(s => s.language === lang);
+        const categories = [...new Set(langSongs.map(s => s.category))];
+        const langArtists = DB.artists.filter(a => a.languages.includes(lang));
+        currentContextQueue = langSongs;
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-r from-purple-900/50 via-[#191923] to-pink-900/40 border border-purple-500/20 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest text-purple-400">ROY'S ERA Language Hub</span>
+              <h1 class="font-display font-extrabold text-3xl sm:text-4xl mt-1">${lang} Music Collection</h1>
+              <p class="text-sm text-zinc-300 mt-1">${langSongs.length} curated tracks • ${langArtists.length} featured artists</p>
+            </div>
+            <button onclick="AudioEngine.playSong('${langSongs[0]?.id}', currentContextQueue)" class="px-6 py-3 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] font-bold text-sm text-white shadow-lg flex items-center gap-2 self-start sm:self-auto">
+              <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play All ${lang}
+            </button>
+          </div>
+
+          <!-- Category Filter Sections -->
+          ${categories.map(cat => {
+            const catSongs = langSongs.filter(s => s.category === cat);
+            return `
+              <section class="space-y-3">
+                <h2 class="font-display font-bold text-xl">${cat} (${lang})</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                  ${catSongs.map(s => renderSongCard(s, langSongs)).join('')}
+                </div>
+              </section>
+            `;
+          }).join('')}
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl">Popular ${lang} Artists & Composers</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+              ${langArtists.map(a => renderArtistCard(a)).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'explore') {
+        const moods = [
+          { name: 'Romantic Mood', grad: 'from-pink-600 to-rose-900' },
+          { name: 'Heartbreak Mood', grad: 'from-slate-700 to-indigo-950' },
+          { name: 'Party Mood', grad: 'from-purple-600 to-indigo-900' },
+          { name: 'Peaceful Music', grad: 'from-emerald-600 to-teal-950' },
+          { name: 'Night Drive', grad: 'from-violet-700 to-slate-950' },
+          { name: 'Rainy Day Music', grad: 'from-cyan-700 to-blue-950' },
+          { name: 'Motivation', grad: 'from-amber-600 to-red-950' },
+          { name: 'Workout', grad: 'from-red-600 to-zinc-950' },
+          { name: 'Travel Mood', grad: 'from-teal-600 to-emerald-950' },
+          { name: 'Relaxing Mood', grad: 'from-indigo-600 to-purple-950' },
+          { name: 'Sad Mood', grad: 'from-zinc-700 to-neutral-950' }
+        ];
+
+        const topCharts = [...DB.songs].sort((a, b) => b.plays - a.plays).slice(0, 10);
+        currentContextQueue = topCharts;
+
+        main.innerHTML = `
+          <div>
+            <h1 class="font-display font-extrabold text-3xl">Explore Moods & Charts</h1>
+            <p class="text-sm text-zinc-400 mt-1">Discover Telugu, Hindi & Tamil songs curated for every emotion.</p>
+          </div>
+
+          <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            ${moods.map(m => `
+              <div onclick="navigate('mood', '${m.name}')" class="h-28 rounded-2xl bg-gradient-to-br ${m.grad} p-5 flex flex-col justify-between cursor-pointer hover:scale-[1.02] transition-transform border border-white/10 shadow-lg">
+                <span class="text-[10px] uppercase tracking-widest text-white/70 font-bold">Mood Mix</span>
+                <h3 class="font-display font-bold text-lg text-white">${m.name}</h3>
+              </div>
+            `).join('')}
+          </section>
+
+          <section class="bg-[#191923] border border-white/10 rounded-3xl p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="font-display font-bold text-xl">ROY'S ERA Top 10 Charts</h2>
+                <p class="text-xs text-zinc-400">Live platform rankings based on verified stream counts</p>
+              </div>
+              <button onclick="AudioEngine.playSong('${topCharts[0]?.id}', currentContextQueue)" class="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-xs font-bold">Play Chart</button>
+            </div>
+            <div class="divide-y divide-white/5">
+              ${topCharts.map((s, idx) => renderSongRow(s, idx)).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'mood') {
+        const moodName = param || 'Romantic Mood';
+        const matching = DB.songs.filter(s => s.mood.toLowerCase().includes(moodName.split(' ')[0].toLowerCase()));
+        const list = matching.length > 0 ? matching : DB.songs.slice(0, 6);
+        currentContextQueue = list;
+
+        main.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>
+              <button onclick="navigate('explore')" class="text-xs text-purple-400 hover:underline mb-2 inline-block">← Back to Moods</button>
+              <h1 class="font-display font-extrabold text-3xl">${moodName}</h1>
+              <p class="text-sm text-zinc-400">${list.length} curated tracks across Telugu, Hindi & Tamil</p>
+            </div>
+            <button onclick="AudioEngine.playSong('${list[0]?.id}', currentContextQueue)" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold">Play All</button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            ${list.map(s => renderSongCard(s, list)).join('')}
+          </div>
+        `;
+      }
+
+      else if (view === 'artists') {
+        main.innerHTML = `
+          <div>
+            <h1 class="font-display font-extrabold text-3xl">Singers & Music Composers</h1>
+            <p class="text-sm text-zinc-400 mt-1">Explore iconic voices and composers from Telugu, Hindi & Tamil cinema.</p>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+            ${DB.artists.map(a => renderArtistCard(a)).join('')}
+          </div>
+        `;
+      }
+
+      else if (view === 'artist') {
+        const artist = DB.artists.find(a => a.id === param) || DB.artists[0];
+        const artistSongs = DB.songs.filter(s => s.artistId === artist.id || s.artist.includes(artist.name) || s.composer.includes(artist.name));
+        const isFollowing = DB.followedArtists.includes(artist.id);
+        const relatedArtists = DB.artists.filter(a => a.id !== artist.id && a.languages.some(l => artist.languages.includes(l))).slice(0, 5);
+        currentContextQueue = artistSongs;
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-br from-[#25173B] to-[#14141C] border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
+            <img src="${artist.artwork}" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover border-4 border-purple-500/40 shadow-2xl" />
+            <div class="flex-1 text-center sm:text-left space-y-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold">
+                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i> Verified Artist • ${artist.role}
+              </span>
+              <h1 class="font-display font-extrabold text-3xl sm:text-5xl">${artist.name}</h1>
+              <p class="text-sm text-zinc-300 max-w-2xl">${artist.bio}</p>
+              <p class="text-xs text-zinc-400">${(artist.followers + (isFollowing ? 1 : 0)).toLocaleString()} Followers • Languages: ${artist.languages.join(', ')}</p>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2">
+                ${artistSongs.length > 0 ? `
+                  <button onclick="AudioEngine.playSong('${artistSongs[0].id}', currentContextQueue)" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2">
+                    <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play Top Songs
+                  </button>
+                ` : ''}
+                <button onclick="toggleFollowArtist('${artist.id}')" class="px-5 py-2.5 rounded-full border ${isFollowing ? 'border-purple-500 bg-purple-600/20 text-purple-300' : 'border-white/20 hover:bg-white/10 text-white'} text-sm font-semibold transition-all">
+                  ${isFollowing ? '✓ Following' : '+ Follow Artist'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <section class="space-y-3">
+            <h2 class="font-display font-bold text-xl">Popular Tracks & Collaborations (${artistSongs.length})</h2>
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-3 divide-y divide-white/5">
+              ${artistSongs.length > 0 ? artistSongs.map((s, idx) => renderSongRow(s, idx)).join('') : '<p class="p-4 text-sm text-zinc-400">More tracks coming soon to ROY’S ERA.</p>'}
+            </div>
+          </section>
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl">Related Artists</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              ${relatedArtists.map(a => renderArtistCard(a)).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'albums') {
+        main.innerHTML = `
+          <div>
+            <h1 class="font-display font-extrabold text-3xl">Albums & Movie Soundtracks</h1>
+            <p class="text-sm text-zinc-400 mt-1">Browse complete soundtracks by music director, language, and era.</p>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+            ${DB.albums.map(a => renderAlbumCard(a)).join('')}
+          </div>
+        `;
+      }
+
+      else if (view === 'album') {
+        const album = DB.albums.find(a => a.id === param) || DB.albums[0];
+        const albumSongs = DB.songs.filter(s => s.albumId === album.id);
+        currentContextQueue = albumSongs;
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-r from-[#221938] to-[#16161E] border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
+            <img src="${album.artwork}" class="w-40 h-40 sm:w-48 sm:h-48 rounded-2xl object-cover shadow-2xl border border-white/10" />
+            <div class="flex-1 text-center sm:text-left space-y-2">
+              <span class="text-xs font-bold uppercase tracking-widest text-pink-400">${album.language} Soundtrack • ${album.year}</span>
+              <h1 class="font-display font-extrabold text-3xl sm:text-4xl">${album.title}</h1>
+              <p class="text-sm text-purple-300 font-semibold">Music Director: ${album.composer}</p>
+              <p class="text-xs text-zinc-400 max-w-2xl">${album.description}</p>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-3">
+                <button onclick="AudioEngine.playSong('${albumSongs[0]?.id}', currentContextQueue)" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2">
+                  <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play Album
+                </button>
+                <button onclick="toggleShuffle(); AudioEngine.playSong('${albumSongs[0]?.id}', currentContextQueue)" class="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-sm font-semibold">
+                  Shuffle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-[#191923] border border-white/5 rounded-2xl p-4 divide-y divide-white/5">
+            ${albumSongs.map((s, idx) => renderSongRow(s, idx)).join('')}
+          </div>
+        `;
+      }
+
+      else if (view === 'liked') {
+        const likedList = DB.likedSongs.map(id => DB.songs.find(s => s.id === id)).filter(Boolean);
+        currentContextQueue = likedList;
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-r from-pink-900/40 via-[#1E1633] to-purple-900/40 border border-pink-500/20 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-xl">
+                <i data-lucide="heart" class="w-9 h-9 text-white fill-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-pink-300">Personal Collection</span>
+                <h1 class="font-display font-extrabold text-3xl sm:text-4xl">Liked Songs</h1>
+                <p class="text-sm text-zinc-300">${likedList.length} saved tracks</p>
+              </div>
+            </div>
+            ${likedList.length > 0 ? `
+              <button onclick="AudioEngine.playSong('${likedList[0].id}', currentContextQueue)" class="px-6 py-3 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2 self-start sm:self-auto">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play Liked Songs
+              </button>
+            ` : ''}
+          </div>
+
+          ${likedList.length > 0 ? `
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-3 divide-y divide-white/5">
+              ${likedList.map((s, idx) => renderSongRow(s, idx)).join('')}
+            </div>
+          ` : `
+            <div class="text-center py-16 bg-[#191923]/50 rounded-3xl border border-white/5">
+              <p class="text-zinc-400 text-sm">You haven't liked any songs yet. Tap the heart icon on any track!</p>
+            </div>
+          `}
+        `;
+      }
+
+      else if (view === 'recent') {
+        const recentList = DB.recentlyPlayed.map(id => DB.songs.find(s => s.id === id)).filter(Boolean);
+        currentContextQueue = recentList;
+
+        main.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="font-display font-extrabold text-3xl">Recently Played</h1>
+              <p class="text-sm text-zinc-400">Your listening history across ROY'S ERA</p>
+            </div>
+            ${recentList.length > 0 ? `<button onclick="AudioEngine.playSong('${recentList[0].id}', currentContextQueue)" class="px-5 py-2.5 rounded-full bg-purple-600 text-sm font-bold">Play History</button>` : ''}
+          </div>
+          <div class="bg-[#191923] border border-white/5 rounded-2xl p-3 divide-y divide-white/5">
+            ${recentList.map((s, idx) => renderSongRow(s, idx)).join('')}
+          </div>
+        `;
+      }
+
+      else if (view === 'library') {
+        // Automatic Smart Playlists + Personal Playlists
+        const favTelugu = DB.songs.filter(s => s.language === 'Telugu' && DB.likedSongs.includes(s.id));
+        const mostPlayed = [...DB.songs].sort((a, b) => b.plays - a.plays).slice(0, 8);
+
+        main.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="font-display font-extrabold text-3xl">Your Music Library</h1>
+              <p class="text-sm text-zinc-400">Personal playlists, smart mixes & followed artists</p>
+            </div>
+            <button onclick="openCreatePlaylistModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2">
+              <i data-lucide="plus" class="w-4 h-4"></i> New Playlist
+            </button>
+          </div>
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl">Your Personal Playlists</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${DB.playlists.map(pl => `
+                <div onclick="navigate('playlist', '${pl.id}')" class="bg-[#191923] hover:bg-[#222230] border border-white/10 rounded-2xl p-4 flex items-center gap-4 cursor-pointer transition-all group">
+                  <img src="${pl.cover}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
+                  <div class="min-w-0 flex-1">
+                    <span class="text-[10px] uppercase font-bold text-purple-400">${pl.isPublic ? 'Public' : 'Private'} Playlist</span>
+                    <h3 class="font-bold text-base text-white truncate group-hover:text-purple-300">${pl.name}</h3>
+                    <p class="text-xs text-zinc-400 truncate mt-0.5">${pl.description}</p>
+                    <p class="text-xs text-zinc-500 mt-1">${pl.songIds.length} songs</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl">Auto-Generated Smart Mixes</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div onclick="navigate('liked')" class="p-5 rounded-2xl bg-gradient-to-br from-pink-600/30 to-purple-900/40 border border-pink-500/20 cursor-pointer hover:scale-[1.01] transition-transform">
+                <h3 class="font-bold text-lg">Liked Songs Mix</h3>
+                <p class="text-xs text-zinc-300 mt-1">${DB.likedSongs.length} tracks you loved</p>
+              </div>
+              <div onclick="navigate('language', 'Telugu')" class="p-5 rounded-2xl bg-gradient-to-br from-purple-600/30 to-indigo-900/40 border border-purple-500/20 cursor-pointer hover:scale-[1.01] transition-transform">
+                <h3 class="font-bold text-lg">Favourite Telugu Hits</h3>
+                <p class="text-xs text-zinc-300 mt-1">${favTelugu.length} liked Telugu tracks</p>
+              </div>
+              <div onclick="AudioEngine.playSong('${mostPlayed[0]?.id}', ${JSON.stringify(mostPlayed).replace(/"/g, '&quot;')})" class="p-5 rounded-2xl bg-gradient-to-br from-amber-600/30 to-red-900/40 border border-amber-500/20 cursor-pointer hover:scale-[1.01] transition-transform">
+                <h3 class="font-bold text-lg">Most Played on ROY'S ERA</h3>
+                <p class="text-xs text-zinc-300 mt-1">Top 8 streamed tracks</p>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'playlist') {
+        const pl = DB.playlists.find(p => p.id === param) || DB.playlists[0];
+        if (!pl) { navigate('library'); return; }
+        const plSongs = pl.songIds.map(id => DB.songs.find(s => s.id === id)).filter(Boolean);
+        currentContextQueue = plSongs;
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-r from-[#23193B] to-[#171722] border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
+            <img src="${pl.cover}" class="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl object-cover shadow-2xl" />
+            <div class="flex-1 text-center sm:text-left space-y-2">
+              <span class="text-xs font-bold uppercase tracking-widest text-purple-400">${pl.isPublic ? 'Public' : 'Private'} Playlist</span>
+              <h1 class="font-display font-extrabold text-3xl sm:text-4xl">${pl.name}</h1>
+              <p class="text-sm text-zinc-300">${pl.description}</p>
+              <p class="text-xs text-zinc-400">${plSongs.length} songs</p>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2">
+                ${plSongs.length > 0 ? `
+                  <button onclick="AudioEngine.playSong('${plSongs[0].id}', currentContextQueue)" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2">
+                    <i data-lucide="play" class="w-4 h-4 fill-current"></i> Play Playlist
+                  </button>
+                ` : ''}
+                <button onclick="copyTextToClipboard('Check out my playlist ${pl.name} on ROY’S ERA!'); showToast('Playlist link copied!');" class="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-xs font-semibold">
+                  Share
+                </button>
+                <button onclick="deletePlaylist('${pl.id}')" class="px-4 py-2.5 rounded-full bg-red-500/15 hover:bg-red-500/25 text-red-400 text-xs font-semibold">
+                  Delete Playlist
+                </button>
+              </div>
+            </div>
+          </div>
+
+          ${plSongs.length > 0 ? `
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-3 divide-y divide-white/5">
+              ${plSongs.map((s, idx) => renderSongRow(s, idx, pl.id)).join('')}
+            </div>
+          ` : `
+            <div class="text-center py-14 bg-[#191923]/60 rounded-3xl border border-white/5 space-y-3">
+              <p class="text-sm text-zinc-400">This playlist is currently empty.</p>
+              <button onclick="navigate('search')" class="px-5 py-2 rounded-full bg-purple-600 text-xs font-bold">Find Songs to Add</button>
+            </div>
+          `}
+        `;
+      }
+
+      else if (view === 'search') {
+        renderSearchView(document.getElementById('global-search-input').value || '');
+      }
+
+      else if (view === 'dashboard') {
+        const user = DB.currentUser;
+        const followedList = DB.followedArtists.map(id => DB.artists.find(a => a.id === id)).filter(Boolean);
+
+        main.innerHTML = `
+          <div class="rounded-3xl bg-gradient-to-r from-purple-900/40 to-pink-900/30 border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] flex items-center justify-center font-display font-extrabold text-2xl">
+                ${user ? user.name[0].toUpperCase() : 'G'}
+              </div>
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">${user ? user.plan : 'Free Tier'}</span>
+                <h1 class="font-display font-extrabold text-2xl sm:text-3xl mt-1">${user ? user.name : 'Guest Listener'}</h1>
+                <p class="text-xs text-zinc-400">${user ? user.email : 'Sign in to sync preferences'}</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="openAuthModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold">Switch Account / Edit</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-4">
+              <p class="text-xs text-zinc-400">Liked Songs</p>
+              <p class="font-display font-extrabold text-2xl text-pink-400 mt-1">${DB.likedSongs.length}</p>
+            </div>
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-4">
+              <p class="text-xs text-zinc-400">Personal Playlists</p>
+              <p class="font-display font-extrabold text-2xl text-purple-400 mt-1">${DB.playlists.length}</p>
+            </div>
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-4">
+              <p class="text-xs text-zinc-400">Followed Artists</p>
+              <p class="font-display font-extrabold text-2xl text-emerald-400 mt-1">${followedList.length}</p>
+            </div>
+            <div class="bg-[#191923] border border-white/5 rounded-2xl p-4">
+              <p class="text-xs text-zinc-400">Preferred Language</p>
+              <p class="font-display font-extrabold text-2xl text-amber-400 mt-1">${user?.preferredLanguage || 'Telugu'}</p>
+            </div>
+          </div>
+
+          <section class="space-y-4">
+            <h2 class="font-display font-bold text-xl">Followed Artists</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+              ${followedList.map(a => renderArtistCard(a)).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      else if (view === 'admin') {
+        renderAdminStudio();
+      }
+
+      lucide.createIcons();
+    }
+
+    /*************************************************************************
+     * 7. LIVE SEARCH ENGINE WITH TABS & FILTERS
+     *************************************************************************/
+    let activeSearchTab = 'all';
+    let searchLangFilter = 'All';
+
+    function handleLiveSearch(query) {
+      if (currentRoute.view !== 'search') {
+        navigate('search');
+        return;
+      }
+      renderSearchView(query);
+    }
+
+    function renderSearchView(query = '') {
+      const main = document.getElementById('main-view');
+      const q = query.trim().toLowerCase();
+
+      let matchedSongs = DB.songs.filter(s => {
+        const langOk = searchLangFilter === 'All' || s.language === searchLangFilter;
+        if (!q) return langOk;
+        return langOk && (
+          s.title.toLowerCase().includes(q) ||
+          s.artist.toLowerCase().includes(q) ||
+          s.album.toLowerCase().includes(q) ||
+          s.composer.toLowerCase().includes(q) ||
+          s.language.toLowerCase().includes(q) ||
+          s.category.toLowerCase().includes(q)
+        );
+      });
+
+      const matchedArtists = DB.artists.filter(a =>
+        !q || a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q) || a.languages.join(' ').toLowerCase().includes(q)
+      );
+
+      const matchedAlbums = DB.albums.filter(a =>
+        !q || a.title.toLowerCase().includes(q) || a.composer.toLowerCase().includes(q) || a.language.toLowerCase().includes(q)
+      );
+
+      currentContextQueue = matchedSongs;
+
+      main.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h1 class="font-display font-extrabold text-2xl sm:text-3xl">
+              ${q ? `Results for "${query}"` : 'Search ROY’S ERA Catalog'}
+            </h1>
+            <div class="flex items-center gap-2">
+              ${['All', 'Telugu', 'Hindi', 'Tamil'].map(l => `
+                <button onclick="searchLangFilter='${l}'; renderSearchView(document.getElementById('global-search-input').value)" class="px-3 py-1.5 rounded-full text-xs font-bold ${searchLangFilter === l ? 'bg-purple-600 text-white' : 'bg-white/5 text-zinc-400 hover:text-white'}">
+                  ${l}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Trending Search Chips -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span class="text-xs text-zinc-500 font-semibold">Trending:</span>
+            ${['Sid Sriram', 'Mangli', 'Devi Sri Prasad', 'Telugu Folk', 'Arijit Singh', 'Anirudh'].map(term => `
+              <button onclick="document.getElementById('global-search-input').value='${term}'; renderSearchView('${term}')" class="px-3 py-1 rounded-full bg-white/5 hover:bg-purple-600/20 text-xs text-zinc-300 whitespace-nowrap">
+                ${term}
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Result Tabs -->
+          <div class="flex gap-2 border-b border-white/10 pb-2">
+            ${[
+              { id: 'all', label: 'All Results' },
+              { id: 'songs', label: `Songs (${matchedSongs.length})` },
+              { id: 'artists', label: `Artists (${matchedArtists.length})` },
+              { id: 'albums', label: `Albums (${matchedAlbums.length})` }
+            ].map(tab => `
+              <button onclick="activeSearchTab='${tab.id}'; renderSearchView(document.getElementById('global-search-input').value)" class="px-4 py-1.5 rounded-lg text-xs font-bold ${activeSearchTab === tab.id ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'}">
+                ${tab.label}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        ${(activeSearchTab === 'all' || activeSearchTab === 'songs') ? `
+          <section class="space-y-3">
+            <h2 class="font-display font-bold text-lg">Songs (${matchedSongs.length})</h2>
+            ${matchedSongs.length > 0 ? `
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                ${matchedSongs.map(s => renderSongCard(s, matchedSongs)).join('')}
+              </div>
+            ` : `<p class="text-sm text-zinc-400 bg-[#191923] p-6 rounded-2xl">No matching songs found. Try searching for "Sid Sriram", "Telugu", or "Mass".</p>`}
+          </section>
+        ` : ''}
+
+        ${(activeSearchTab === 'all' || activeSearchTab === 'artists') && matchedArtists.length > 0 ? `
+          <section class="space-y-3">
+            <h2 class="font-display font-bold text-lg">Artists (${matchedArtists.length})</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+              ${matchedArtists.map(a => renderArtistCard(a)).join('')}
+            </div>
+          </section>
+        ` : ''}
+
+        ${(activeSearchTab === 'all' || activeSearchTab === 'albums') && matchedAlbums.length > 0 ? `
+          <section class="space-y-3">
+            <h2 class="font-display font-bold text-lg">Albums (${matchedAlbums.length})</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${matchedAlbums.map(a => renderAlbumCard(a)).join('')}
+            </div>
+          </section>
+        ` : ''}
+      `;
+      lucide.createIcons();
+    }
+
+    /*************************************************************************
+     * 8. ADMIN STUDIO & SUPABASE POSTGRESQL SCHEMA INSPECTOR
+     *************************************************************************/
+    function renderAdminStudio() {
+      const main = document.getElementById('main-view');
+      const totalPlays = DB.songs.reduce((acc, s) => acc + (s.plays || 0), 0);
+
+      main.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">ROLE-BASED ADMIN ACCESS</span>
+            <h1 class="font-display font-extrabold text-3xl mt-1">ROY'S ERA Admin Catalog Studio</h1>
+            <p class="text-sm text-zinc-400">Upload authorized audio, add Telugu/Hindi/Tamil tracks, manage catalog & inspect PostgreSQL schema.</p>
+          </div>
+          <button onclick="openAddSongModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-sm font-bold flex items-center gap-2 self-start">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Add Authorized Song
+          </button>
+        </div>
+
+        <!-- Analytics KPIs -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-[#191923] border border-white/10 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400">Total Catalog Songs</p>
+            <p class="font-display font-extrabold text-2xl text-white mt-1">${DB.songs.length}</p>
+          </div>
+          <div class="bg-[#191923] border border-white/10 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400">Verified Total Streams</p>
+            <p class="font-display font-extrabold text-2xl text-purple-400 mt-1">${totalPlays.toLocaleString()}</p>
+          </div>
+          <div class="bg-[#191923] border border-white/10 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400">Artists & Composers</p>
+            <p class="font-display font-extrabold text-2xl text-pink-400 mt-1">${DB.artists.length}</p>
+          </div>
+          <div class="bg-[#191923] border border-white/10 rounded-2xl p-4">
+            <p class="text-xs text-zinc-400">Albums & Soundtracks</p>
+            <p class="font-display font-extrabold text-2xl text-emerald-400 mt-1">${DB.albums.length}</p>
+          </div>
+        </div>
+
+        <!-- Song Management Table -->
+        <div class="bg-[#191923] border border-white/10 rounded-2xl overflow-hidden">
+          <div class="p-4 border-b border-white/10 flex items-center justify-between">
+            <h2 class="font-display font-bold text-base">Manage Music Catalog</h2>
+            <span class="text-xs text-zinc-400">Click Play to test stream • Delete removes from DB</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-white/5 text-zinc-400 uppercase">
+                <tr>
+                  <th class="p-3">Song Title</th>
+                  <th class="p-3">Artist</th>
+                  <th class="p-3">Language</th>
+                  <th class="p-3">Category</th>
+                  <th class="p-3">Plays</th>
+                  <th class="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5">
+                ${DB.songs.map(s => `
+                  <tr class="hover:bg-white/5">
+                    <td class="p-3 font-semibold text-white">${s.title}</td>
+                    <td class="p-3 text-zinc-300">${s.artist}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">${s.language}</span></td>
+                    <td class="p-3 text-zinc-400">${s.category}</td>
+                    <td class="p-3 font-mono text-zinc-300">${(s.plays || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right space-x-2">
+                      <button onclick="AudioEngine.playSong('${s.id}')" class="px-2.5 py-1 rounded bg-purple-600/30 text-purple-300 hover:bg-purple-600 hover:text-white">Play</button>
+                      <button onclick="adminDeleteSong('${s.id}')" class="px-2.5 py-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white">Delete</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Production Supabase PostgreSQL Schema Reference -->
+        <div class="bg-[#191923] border border-white/10 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-base flex items-center gap-2">
+              <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i> Supabase PostgreSQL Production Schema (RLS Enabled)
+            </h3>
+            <button onclick="copyTextToClipboard(document.getElementById('sql-schema-code').textContent); showToast('SQL Schema copied!')" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold">Copy SQL</button>
+          </div>
+          <pre id="sql-schema-code" class="bg-[#101014] p-4 rounded-xl text-[11px] font-mono text-emerald-300 overflow-x-auto leading-relaxed">-- ROY'S ERA Production PostgreSQL Schema
+CREATE TABLE profiles (id UUID PRIMARY KEY REFERENCES auth.users, display_name TEXT, preferred_language TEXT DEFAULT 'Telugu', role TEXT DEFAULT 'listener', created_at TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE artists (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name TEXT NOT NULL, role TEXT, bio TEXT, languages TEXT[], artwork_url TEXT, created_at TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE albums (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), title TEXT NOT NULL, composer TEXT, language TEXT, release_year INT, artwork_url TEXT, created_at TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE songs (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), title TEXT NOT NULL, artist_id UUID REFERENCES artists(id), album_id UUID REFERENCES albums(id), language TEXT NOT NULL, category TEXT, mood TEXT, duration INT, audio_stream_url TEXT, license_type TEXT, play_count BIGINT DEFAULT 0, created_at TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE playlists (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID REFERENCES profiles(id) ON DELETE CASCADE, name TEXT NOT NULL, description TEXT, is_public BOOLEAN DEFAULT TRUE, created_at TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE playlist_songs (playlist_id UUID REFERENCES playlists(id) ON DELETE CASCADE, song_id UUID REFERENCES songs(id) ON DELETE CASCADE, position INT, PRIMARY KEY (playlist_id, song_id));
+CREATE TABLE liked_songs (user_id UUID REFERENCES profiles(id) ON DELETE CASCADE, song_id UUID REFERENCES songs(id) ON DELETE CASCADE, liked_at TIMESTAMPTZ DEFAULT NOW(), PRIMARY KEY (user_id, song_id));
+CREATE TABLE recently_played (id BIGSERIAL PRIMARY KEY, user_id UUID REFERENCES profiles(id) ON DELETE CASCADE, song_id UUID REFERENCES songs(id) ON DELETE CASCADE, played_at TIMESTAMPTZ DEFAULT NOW());
+ALTER TABLE playlists ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own playlists" ON playlists FOR ALL USING (auth.uid() = user_id);</pre>
+        </div>
+      `;
+    }
+
+    function openAddSongModal() {
+      showModal(`
+        <div class="bg-[#191923] border border-white/15 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-lg">Add Authorized Song to Catalog</h3>
+            <button onclick="closeModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="sm:col-span-2">
+              <label class="text-xs text-zinc-400 block mb-1">Song Title *</label>
+              <input id="adm-title" type="text" placeholder="e.g., Amaravati Anthem" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Singer Name *</label>
+              <input id="adm-artist" type="text" placeholder="e.g., Sid Sriram" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Music Composer</label>
+              <input id="adm-composer" type="text" placeholder="e.g., Devi Sri Prasad" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Language</label>
+              <select id="adm-lang" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3 py-2 text-sm text-white">
+                <option value="Telugu">Telugu</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Tamil">Tamil</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Category</label>
+              <select id="adm-cat" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3 py-2 text-sm text-white">
+                <option value="Romantic">Romantic</option>
+                <option value="Melody">Melody</option>
+                <option value="Mass">Mass</option>
+                <option value="Folk">Folk</option>
+                <option value="Love Failure">Love Failure</option>
+                <option value="Devotional">Devotional</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="text-xs text-zinc-400 block mb-1">Authorized Audio File (MP3/WAV) or Stream URL (Optional — uses Studio Raga Engine if blank)</label>
+              <input id="adm-file" type="file" accept="audio/*" class="w-full text-xs text-zinc-300 bg-[#101014] border border-white/10 rounded-xl p-2" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm text-zinc-400">Cancel</button>
+            <button onclick="adminAddSongSubmit()" class="px-5 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white">Publish Song</button>
+          </div>
+        </div>
+      `);
+    }
+
+    function adminAddSongSubmit() {
+      const title = document.getElementById('adm-title').value.trim();
+      const artist = document.getElementById('adm-artist').value.trim();
+      const composer = document.getElementById('adm-composer').value.trim() || artist;
+      const language = document.getElementById('adm-lang').value;
+      const category = document.getElementById('adm-cat').value;
+      const fileInput = document.getElementById('adm-file');
+
+      if (!title || !artist) {
+        showToast('Title and Singer Name are required', 'error');
+        return;
+      }
+
+      let audioUrl = null;
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        audioUrl = URL.createObjectURL(fileInput.files[0]);
+      }
+
+      const newSong = {
+        id: 's-' + Date.now(),
+        title,
+        artist,
+        artistId: 'art-sid',
+        composer,
+        album: `${language} Studio Releases`,
+        albumId: 'alb-deccan',
+        language,
+        category,
+        mood: category === 'Mass' ? 'Party Mood' : 'Romantic Mood',
+        year: 2026,
+        duration: 215,
+        plays: 1,
+        audioUrl,
+        synthPreset: category === 'Mass' ? 'telugu_mass' : 'telugu_romantic',
+        licenseType: audioUrl ? 'Authorized User Upload' : 'Licensed Studio Composition',
+        colors: ['#8B5CF6', '#EC4899'],
+        artwork: makeArtSVG(title, artist, '#8B5CF6', '#EC4899')
+      };
+
+      DB.songs.unshift(newSong);
+      saveDB(DB);
+      closeModal();
+      showToast(`Published "${title}" to ROY'S ERA!`);
+      renderCurrentView();
+    }
+
+    function adminDeleteSong(songId) {
+      DB.songs = DB.songs.filter(s => s.id !== songId);
+      saveDB(DB);
+      showToast('Song removed from catalog');
+      renderCurrentView();
+    }
+
+    /*************************************************************************
+     * 9. AUTHENTICATION, PREFERENCES & SHELL HELPERS
+     *************************************************************************/
+    function renderUserHeader() {
+      const area = document.getElementById('user-header-area');
+      const user = DB.currentUser;
+      if (!user) {
+        area.innerHTML = `<button onclick="openAuthModal()" class="px-4 py-1.5 rounded-full bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white">Sign In</button>`;
+        return;
+      }
+      area.innerHTML = `
+        <button onclick="navigate('dashboard')" class="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-[#191923] hover:bg-white/10 border border-white/10 transition-all">
+          <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] flex items-center justify-center text-xs font-extrabold">
+            ${user.name[0].toUpperCase()}
+          </div>
+          <span class="hidden sm:inline text-xs font-semibold text-white">${user.name}</span>
+        </button>
+      `;
+    }
+
+    function openAuthModal() {
+      showModal(`
+        <div class="bg-[#191923] border border-white/15 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-lg">ROY'S ERA Account & Preferences</h3>
+            <button onclick="closeModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Display Name</label>
+              <input id="auth-name" type="text" value="${DB.currentUser?.name || 'Roy Listener'}" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Email</label>
+              <input id="auth-email" type="email" value="${DB.currentUser?.email || 'listener@roysera.music'}" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label class="text-xs text-zinc-400 block mb-1">Primary Language Preference</label>
+              <select id="auth-lang" class="w-full bg-[#101014] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white">
+                <option value="Telugu" ${DB.currentUser?.preferredLanguage === 'Telugu' ? 'selected' : ''}>Telugu (Primary)</option>
+                <option value="Hindi" ${DB.currentUser?.preferredLanguage === 'Hindi' ? 'selected' : ''}>Hindi</option>
+                <option value="Tamil" ${DB.currentUser?.preferredLanguage === 'Tamil' ? 'selected' : ''}>Tamil</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm text-zinc-400">Cancel</button>
+            <button onclick="saveAuthProfile()" class="px-5 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white">Save Profile</button>
+          </div>
+        </div>
+      `);
+    }
+
+    function saveAuthProfile() {
+      const name = document.getElementById('auth-name').value.trim() || 'Roy Listener';
+      const email = document.getElementById('auth-email').value.trim() || 'listener@roysera.music';
+      const preferredLanguage = document.getElementById('auth-lang').value;
+      DB.currentUser = { ...DB.currentUser, name, email, preferredLanguage };
+      saveDB(DB);
+      document.getElementById('header-lang-pref').value = preferredLanguage;
+      renderUserHeader();
+      closeModal();
+      showToast(`Profile updated (${preferredLanguage} prioritized)`);
+      renderCurrentView();
+    }
+
+    function setPreferredLanguage(lang) {
+      if (DB.currentUser) {
+        DB.currentUser.preferredLanguage = lang;
+        saveDB(DB);
+      }
+      showToast(`Language preference set to ${lang}`);
+      if (lang !== 'All') navigate('language', lang);
+      else renderCurrentView();
+    }
+
+    function updateSidebarCounts() {
+      const likedCount = document.getElementById('sidebar-liked-count');
+      if (likedCount) likedCount.textContent = DB.likedSongs.length;
+
+      const plList = document.getElementById('sidebar-playlists-list');
+      if (plList) {
+        plList.innerHTML = DB.playlists.map(pl => `
+          <button onclick="navigate('playlist', '${pl.id}')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 truncate transition-colors">
+            <span class="truncate">${pl.name}</span>
+            <span class="text-[10px] text-zinc-600">${pl.songIds.length}</span>
+          </button>
+        `).join('');
+      }
+    }
+
+    function toggleMobileSidebar(open) {
+      const sb = document.getElementById('left-sidebar');
+      const bd = document.getElementById('mobile-backdrop');
+      if (open) {
+        sb.classList.remove('-translate-x-full');
+        bd.classList.remove('hidden');
+      } else {
+        sb.classList.add('-translate-x-full');
+        bd.classList.add('hidden');
+      }
+    }
+
+    function toggleQueueDrawer(forceState = null) {
+      const drawer = document.getElementById('queue-drawer');
+      const isClosed = drawer.classList.contains('translate-x-full');
+      const shouldOpen = forceState !== null ? forceState : isClosed;
+      drawer.classList.toggle('translate-x-full', !shouldOpen);
+      if (shouldOpen) renderQueue();
+    }
+
+    function toggleExpandedPlayer(open) {
+      const exp = document.getElementById('expanded-player');
+      exp.classList.toggle('translate-y-full', !open);
+    }
+
+    function showModal(html) {
+      const container = document.getElementById('modal-container');
+      container.innerHTML = html;
+      container.classList.remove('hidden');
+      container.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      const container = document.getElementById('modal-container');
+      container.classList.add('hidden');
+      container.classList.remove('flex');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-xl glass-panel border ${type === 'error' ? 'border-red-500/50 text-red-200' : 'border-purple-500/40 text-white'} text-xs font-semibold shadow-2xl flex items-center gap-2 transition-all duration-300`;
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full ${type === 'error' ? 'bg-red-500' : 'bg-purple-400'}"></span> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayPause();
+      } else if (e.code === 'ArrowRight') {
+        AudioEngine.seekTo(AudioEngine.elapsed + 10);
+      } else if (e.code === 'ArrowLeft') {
+        AudioEngine.seekTo(AudioEngine.elapsed - 10);
+      } else if (e.key.toLowerCase() === 'm') {
+        toggleMute();
+      } else if (e.key.toLowerCase() === 'l') {
+        toggleLikeCurrent();
+      }
+    });
+
+    // BOOTSTRAP APPLICATION ON WINDOW LOAD
+    window.onload = function () {
+      renderUserHeader();
+      updateSidebarCounts();
+      navigate('home');
+      renderQueue();
+      startVisualizerLoop();
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
